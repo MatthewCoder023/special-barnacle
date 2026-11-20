@@ -29,7 +29,8 @@ Future<void> openDirections(
   ];
   final waypoints = stops.isEmpty ? '' : '&waypoints=${stops.join('%7C')}';
   final uri = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng$waypoints');
+    'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng$waypoints',
+  );
   final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
   if (!ok && context.mounted) {
     showToast(context, 'Could not open Google Maps.', success: false);
@@ -48,9 +49,12 @@ class StationDetailScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     final s = state.stationById(stationId);
     if (s == null) {
-      return const DetailScaffold(title: 'Station', children: [
-        EmptyState(icon: 'charging', title: 'This station is not available'),
-      ]);
+      return const DetailScaffold(
+        title: 'Station',
+        children: [
+          EmptyState(icon: 'charging', title: 'This station is not available'),
+        ],
+      );
     }
     final now = state.now;
     final vehicle = state.me.vehicle;
@@ -65,7 +69,13 @@ class StationDetailScreen extends StatelessWidget {
     final option = vehicle == null
         ? null
         : ChargingRules.evaluate(
-            vehicle, state.batteryPct, here.lat, here.lng, s, now);
+            vehicle,
+            state.batteryPct,
+            here.lat,
+            here.lng,
+            s,
+            now,
+          );
     final text = Theme.of(context).textTheme;
 
     return DetailScaffold(
@@ -111,8 +121,11 @@ class StationDetailScreen extends StatelessWidget {
                 ),
                 if (!ChargingRules.compatible(vehicle, s)) ...[
                   const SizedBox(height: 8),
-                  const Tag('No connector matches your vehicle',
-                      tone: Tone.danger, icon: 'alert'),
+                  const Tag(
+                    'No connector matches your vehicle',
+                    tone: Tone.danger,
+                    icon: 'alert',
+                  ),
                 ],
               ],
             ),
@@ -132,8 +145,8 @@ class StationDetailScreen extends StatelessWidget {
                   for (final c in s.connectors)
                     Tag(
                       '${c.type.label} · ${c.powerKw.round()} kW',
-                      tone: vehicle != null &&
-                              vehicle.connectors.contains(c.type)
+                      tone:
+                          vehicle != null && vehicle.connectors.contains(c.type)
                           ? Tone.success
                           : Tone.neutral,
                       icon: 'charging',
@@ -141,12 +154,19 @@ class StationDetailScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              InfoRow('wallet',
-                  '${s.fee} · published fee collected ${fmtDate(s.feeDate)}'),
+              InfoRow(
+                'wallet',
+                '${s.fee} · published fee collected ${fmtDate(s.feeDate)}',
+              ),
               InfoRow('clock', s.hours),
-              InfoRow('car', '${s.parking} · for reference, not guaranteed on arrival'),
-              InfoRow('database',
-                  'Source: ${s.source}, ${fmtDate(s.sourceDate)}'),
+              InfoRow(
+                'car',
+                '${s.parking} · for reference, not guaranteed on arrival',
+              ),
+              InfoRow(
+                'database',
+                'Source: ${s.source}, ${fmtDate(s.sourceDate)}',
+              ),
             ],
           ),
         ),
@@ -162,13 +182,15 @@ class StationDetailScreen extends StatelessWidget {
               key: ValueKey(latest?.createdAt),
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Tag(condition.label,
-                    tone: conditionTone(condition),
-                    icon: condition == StationCondition.working
-                        ? 'check'
-                        : condition == StationCondition.notWorking
-                            ? 'alert'
-                            : 'info'),
+                Tag(
+                  condition.label,
+                  tone: conditionTone(condition),
+                  icon: condition == StationCondition.working
+                      ? 'check'
+                      : condition == StationCondition.notWorking
+                      ? 'alert'
+                      : 'info',
+                ),
                 const SizedBox(height: 8),
                 Text(
                   latest == null
@@ -180,8 +202,9 @@ class StationDetailScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
-                        '${plural(s.reports.length, 'report')} in total',
-                        style: text.bodySmall),
+                      '${plural(s.reports.length, 'report')} in total',
+                      style: text.bodySmall,
+                    ),
                   ),
               ],
             ),
@@ -196,11 +219,16 @@ class StationDetailScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _QueueCount(
-                        value: charging.length, label: 'Charging now'),
+                      value: charging.length,
+                      label: 'Charging now',
+                    ),
                   ),
                   Expanded(
                     child: _QueueCount(
-                        value: waiting.length, label: 'Waiting', pink: true),
+                      value: waiting.length,
+                      label: 'Waiting',
+                      pink: true,
+                    ),
                   ),
                 ],
               ),
@@ -259,8 +287,7 @@ class StationDetailScreen extends StatelessWidget {
                                   label: 'Now charging',
                                   kind: AppButtonKind.sky,
                                   small: true,
-                                  onTap: () =>
-                                      state.checkIn(s, charging: true),
+                                  onTap: () => state.checkIn(s, charging: true),
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -297,7 +324,11 @@ class StationDetailScreen extends StatelessWidget {
       title: 'Report station status',
       builder: (_) => _StatusForm(
         onSubmit: (working, note) {
-          context.read<AppState>().reportStatus(s, working: working, note: note);
+          context.read<AppState>().reportStatus(
+            s,
+            working: working,
+            note: note,
+          );
           showToast(context, 'Status report posted with the current time.');
         },
       ),

@@ -26,8 +26,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     _items = state.myNotifications;
     _unread = _items.where((n) => !n.read).toSet();
     // Opening the list marks everything as read.
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => state.markNotificationsRead());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => state.markNotificationsRead(),
+    );
   }
 
   @override
@@ -47,17 +48,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: AppCard(
-                color: _unread.contains(n) ? AppColors.skyMist : AppColors.white,
+                color: _unread.contains(n)
+                    ? AppColors.skyMist
+                    : AppColors.white,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 2),
-                      child: AppIcon('notifications',
-                          size: 18,
-                          color: _unread.contains(n)
-                              ? AppColors.pinkDeep
-                              : AppColors.inkFaint),
+                      child: AppIcon(
+                        'notifications',
+                        size: 18,
+                        color: _unread.contains(n)
+                            ? AppColors.pinkDeep
+                            : AppColors.inkFaint,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -67,10 +72,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           Row(
                             children: [
                               Expanded(
-                                child: Text(n.title,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall),
+                                child: Text(
+                                  n.title,
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
                               ),
                               if (_unread.contains(n))
                                 const Tag('New', tone: Tone.pink),
@@ -79,8 +84,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           const SizedBox(height: 2),
                           Text(n.body),
                           const SizedBox(height: 4),
-                          Text(timeAgo(n.at),
-                              style: Theme.of(context).textTheme.bodySmall),
+                          Text(
+                            timeAgo(n.at),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         ],
                       ),
                     ),

@@ -129,7 +129,12 @@ class AuthorLine extends StatelessWidget {
     final role = community?.members[userId];
     return Row(
       children: [
-        Avatar(user?.initials ?? '?', imageUrl: user?.avatarUrl, imageBytes: user?.avatarBytes, size: 30),
+        Avatar(
+          user?.initials ?? '?',
+          imageUrl: user?.avatarUrl,
+          imageBytes: user?.avatarBytes,
+          size: 30,
+        ),
         const SizedBox(width: 8),
         Flexible(
           child: Text(

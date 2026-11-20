@@ -34,13 +34,22 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _busy = false;
   String? _error;
   String? _notice;
-  late final Future<Set<String>> _providers =
-      context.read<AppState>().oauthProviders();
+  late final Future<Set<String>> _providers = context
+      .read<AppState>()
+      .oauthProviders();
 
   static const _roles = [
     (PlatformRole.member, 'EV owner', 'Join communities, post, vote and RSVP'),
-    (PlatformRole.guest, 'Prospective owner', 'Read-only; can join open communities'),
-    (PlatformRole.provider, 'Service provider', 'List your shop and read feedback'),
+    (
+      PlatformRole.guest,
+      'Prospective owner',
+      'Read-only; can join open communities',
+    ),
+    (
+      PlatformRole.provider,
+      'Service provider',
+      'List your shop and read feedback',
+    ),
   ];
 
   @override
@@ -124,8 +133,9 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
-    final signedIn =
-        context.select<AppState, bool>((s) => s.currentUser != null);
+    final signedIn = context.select<AppState, bool>(
+      (s) => s.currentUser != null,
+    );
     // A Google or Apple sign-in finished while this screen was open.
     if (signedIn) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -149,8 +159,8 @@ class _AuthScreenState extends State<AuthScreen> {
             label: _busy
                 ? 'Please wait'
                 : _registering
-                    ? 'Create account'
-                    : 'Sign in',
+                ? 'Create account'
+                : 'Sign in',
             expand: true,
             onTap: _ready ? _submit : null,
           ),
@@ -163,9 +173,9 @@ class _AuthScreenState extends State<AuthScreen> {
           onChanged: _busy
               ? (_) {}
               : (i) => setState(() {
-                    _mode = i;
-                    _error = null;
-                  }),
+                  _mode = i;
+                  _error = null;
+                }),
         ),
         const SizedBox(height: 18),
         FutureBuilder<Set<String>>(
@@ -199,10 +209,13 @@ class _AuthScreenState extends State<AuthScreen> {
                               Expanded(child: Divider()),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: Text('or with email',
-                                    style: TextStyle(
-                                        fontSize: 12.5,
-                                        color: AppColors.inkSoft)),
+                                child: Text(
+                                  'or with email',
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    color: AppColors.inkSoft,
+                                  ),
+                                ),
                               ),
                               Expanded(child: Divider()),
                             ],
@@ -260,15 +273,21 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: Row(
                           children: [
                             Text('Joining as ', style: text.bodyMedium),
-                            Text(roleLabel,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600)),
+                            Text(
+                              roleLabel,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             const Spacer(),
-                            Text(_chooseRole ? 'Done' : 'Change',
-                                style: const TextStyle(
-                                    color: AppColors.pinkDeep,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13)),
+                            Text(
+                              _chooseRole ? 'Done' : 'Change',
+                              style: const TextStyle(
+                                color: AppColors.pinkDeep,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -284,7 +303,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               width: double.infinity,
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 12),
+                                horizontal: 14,
+                                vertical: 12,
+                              ),
                               decoration: BoxDecoration(
                                 color: role == _role
                                     ? AppColors.skySoft
@@ -303,16 +324,22 @@ class _AuthScreenState extends State<AuthScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(title,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w600)),
+                                        Text(
+                                          title,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                         Text(detail, style: text.bodySmall),
                                       ],
                                     ),
                                   ),
                                   if (role == _role)
-                                    const AppIcon('check',
-                                        size: 18, color: AppColors.skyDeep),
+                                    const AppIcon(
+                                      'check',
+                                      size: 18,
+                                      color: AppColors.skyDeep,
+                                    ),
                                 ],
                               ),
                             ),
@@ -369,18 +396,27 @@ class _ProviderButton extends StatelessWidget {
                   height: 24,
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(
-                      color: AppColors.skySoft, shape: BoxShape.circle),
-                  child: Text(mark,
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.skyDeep)),
+                    color: AppColors.skySoft,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    mark,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.skyDeep,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 10),
               ],
-              Text(label,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w600)),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ),

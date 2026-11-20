@@ -73,8 +73,10 @@ class EvMapViewState extends State<EvMapView>
   Offset _pan = Offset.zero;
   double _ppkAtStart = 26;
 
-  late final AnimationController _fly =
-      AnimationController(vsync: this, duration: AppMotion.slow);
+  late final AnimationController _fly = AnimationController(
+    vsync: this,
+    duration: AppMotion.slow,
+  );
   double _fromPpk = 26, _toPpk = 26;
   Offset _fromPan = Offset.zero, _toPan = Offset.zero;
   Size _size = Size.zero;
@@ -97,20 +99,17 @@ class EvMapViewState extends State<EvMapView>
     super.dispose();
   }
 
-  double get _kx =>
-      111.32 * math.cos(widget.origin.lat * math.pi / 180);
+  double get _kx => 111.32 * math.cos(widget.origin.lat * math.pi / 180);
   static const _ky = 110.57;
 
   /// Position in kilometers east and south of the driver.
   Offset _world(Place p) => Offset(
-        (p.lng - widget.origin.lng) * _kx,
-        -(p.lat - widget.origin.lat) * _ky,
-      );
+    (p.lng - widget.origin.lng) * _kx,
+    -(p.lat - widget.origin.lat) * _ky,
+  );
 
-  Offset get _center => Offset(
-        _size.width / 2,
-        (_size.height - widget.bottomInset) * 0.52,
-      );
+  Offset get _center =>
+      Offset(_size.width / 2, (_size.height - widget.bottomInset) * 0.52);
 
   Offset _screen(Place p) => _center + _pan + _world(p) * _ppk;
 
@@ -155,7 +154,8 @@ class EvMapViewState extends State<EvMapView>
   static Offset _along(List<Offset> line, double t) {
     if (line.length < 2) return line.first;
     final lengths = [
-      for (var i = 0; i < line.length - 1; i++) (line[i + 1] - line[i]).distance,
+      for (var i = 0; i < line.length - 1; i++)
+        (line[i + 1] - line[i]).distance,
     ];
     final total = lengths.fold<double>(0, (a, b) => a + b);
     var remaining = total * t.clamp(0.0, 1.0);
@@ -228,12 +228,12 @@ class EvMapViewState extends State<EvMapView>
   }
 
   Widget _positioned(Offset at, double size, Widget child) => Positioned(
-        left: at.dx - size / 2,
-        top: at.dy - size / 2,
-        width: size,
-        height: size,
-        child: child,
-      );
+    left: at.dx - size / 2,
+    top: at.dy - size / 2,
+    width: size,
+    height: size,
+    child: child,
+  );
 }
 
 class _Pin extends StatelessWidget {
@@ -257,7 +257,9 @@ class _Pin extends StatelessWidget {
         color: big ? color : AppColors.white,
         shape: BoxShape.circle,
         border: Border.all(
-            color: big ? AppColors.white : color, width: big ? 3 : 2),
+          color: big ? AppColors.white : color,
+          width: big ? 3 : 2,
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.ink.withValues(alpha: 0.16),
@@ -304,8 +306,7 @@ class _DriverMarker extends StatelessWidget {
           // The arrow icon points up-right; turn it to point up.
           child: Transform.rotate(
             angle: -math.pi / 4,
-            child:
-                const AppIcon('route', size: 14, color: AppColors.white),
+            child: const AppIcon('route', size: 14, color: AppColors.white),
           ),
         ),
       ),
@@ -334,7 +335,9 @@ class _MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawRect(
-        Offset.zero & size, Paint()..color = const Color(0xFFE6F2F8));
+      Offset.zero & size,
+      Paint()..color = const Color(0xFFE6F2F8),
+    );
 
     // Schematic road grid. The spacing steps with zoom so lines stay a
     // comfortable distance apart on screen.
@@ -352,14 +355,20 @@ class _MapPainter extends CustomPainter {
     for (var i = firstX; i <= lastX; i++) {
       final x = origin.dx + i * spacing;
       canvas.drawLine(
-          Offset(x, 0), Offset(x, size.height), i % 5 == 0 ? major : minor);
+        Offset(x, 0),
+        Offset(x, size.height),
+        i % 5 == 0 ? major : minor,
+      );
     }
     final firstY = ((0 - origin.dy) / spacing).floor();
     final lastY = ((size.height - origin.dy) / spacing).ceil();
     for (var i = firstY; i <= lastY; i++) {
       final y = origin.dy + i * spacing;
       canvas.drawLine(
-          Offset(0, y), Offset(size.width, y), i % 5 == 0 ? major : minor);
+        Offset(0, y),
+        Offset(size.width, y),
+        i % 5 == 0 ? major : minor,
+      );
     }
 
     // Alternatives first, then the selected route on top.
@@ -380,7 +389,8 @@ class _MapPainter extends CustomPainter {
   /// The part of [line] from its start up to [at].
   List<Offset> _traveled(List<Offset> line, Offset at) {
     final total = [
-      for (var i = 0; i < line.length - 1; i++) (line[i + 1] - line[i]).distance,
+      for (var i = 0; i < line.length - 1; i++)
+        (line[i + 1] - line[i]).distance,
     ];
     var remaining = total.fold<double>(0, (a, b) => a + b) * (progress ?? 0);
     final out = [line.first];

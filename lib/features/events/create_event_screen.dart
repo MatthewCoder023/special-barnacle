@@ -93,8 +93,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     final hosts = state.managedGroups;
     final start = _date == null
         ? null
-        : DateTime(_date!.year, _date!.month, _date!.day, _time.hour,
-            _time.minute);
+        : DateTime(
+            _date!.year,
+            _date!.month,
+            _date!.day,
+            _time.hour,
+            _time.minute,
+          );
     return DetailScaffold(
       title: 'New event',
       bottom: AppButton(
@@ -120,8 +125,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               if (picked != null) {
                 setState(() {
                   _host = picked;
-                  if (!picked.isTribe &&
-                      _visibility == EventVisibility.tribe) {
+                  if (!picked.isTribe && _visibility == EventVisibility.tribe) {
                     _visibility = EventVisibility.community;
                   }
                 });
@@ -149,11 +153,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        AppField(
-          controller: _description,
-          label: 'Description',
-          maxLines: 3,
-        ),
+        AppField(controller: _description, label: 'Description', maxLines: 3),
         Row(
           children: [
             Expanded(
@@ -194,7 +194,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               value: _origin?.name,
               hint: 'Where the convoy starts',
               onTap: () async {
-                final picked = await _pickPlace(anchor, 'Starting point', _origin);
+                final picked = await _pickPlace(
+                  anchor,
+                  'Starting point',
+                  _origin,
+                );
                 if (picked != null) setState(() => _origin = picked);
               },
             ),
@@ -207,7 +211,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             hint: 'Choose a place',
             onTap: () async {
               final picked = await _pickPlace(
-                  anchor, _type.hasRoute ? 'Destination' : 'Venue', _venue);
+                anchor,
+                _type.hasRoute ? 'Destination' : 'Venue',
+                _venue,
+              );
               if (picked != null) setState(() => _venue = picked);
             },
           ),
@@ -295,7 +302,8 @@ class _PickerField extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    color: value == null ? AppColors.inkFaint : AppColors.ink),
+                  color: value == null ? AppColors.inkFaint : AppColors.ink,
+                ),
               ),
             ),
             const AppIcon('chevron', size: 16, color: AppColors.inkFaint),

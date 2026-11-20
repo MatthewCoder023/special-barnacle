@@ -54,7 +54,9 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(3),
                         decoration: const BoxDecoration(
-                            color: AppColors.white, shape: BoxShape.circle),
+                          color: AppColors.white,
+                          shape: BoxShape.circle,
+                        ),
                         child: Avatar(
                           me.initials,
                           size: 70,
@@ -72,11 +74,16 @@ class ProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.pink,
                             shape: BoxShape.circle,
-                            border:
-                                Border.all(color: AppColors.white, width: 2),
+                            border: Border.all(
+                              color: AppColors.white,
+                              width: 2,
+                            ),
                           ),
-                          child: const AppIcon('camera',
-                              size: 13, color: AppColors.white),
+                          child: const AppIcon(
+                            'camera',
+                            size: 13,
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -103,8 +110,11 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         Tag(me.role.label, tone: Tone.pink),
                         if (me.isVerified)
-                          const Tag('Verified owner',
-                              tone: Tone.success, icon: 'check'),
+                          const Tag(
+                            'Verified owner',
+                            tone: Tone.success,
+                            icon: 'check',
+                          ),
                       ],
                     ),
                   ],
@@ -129,80 +139,86 @@ class ProfileScreen extends StatelessWidget {
                 ),
         ),
         const SizedBox(height: 16),
-        _MenuGroup(rows: [
-          _MenuRow(
-            icon: 'edit',
-            title: 'Edit profile',
-            detail: 'Name, username and city',
-            onTap: () => pushScreen(context, const EditProfileScreen()),
-          ),
-          if (ownsVehicle)
+        _MenuGroup(
+          rows: [
             _MenuRow(
-              icon: 'car',
-              title: 'My EV',
-              detail: me.vehicle == null
-                  ? 'Add your vehicle and charging preferences'
-                  : '${me.vehicle!.name} · charge to ${me.chargeToPct}%, keep ${me.reservePct}%',
-              onTap: () => pushScreen(context, const VehicleScreen()),
+              icon: 'edit',
+              title: 'Edit profile',
+              detail: 'Name, username and city',
+              onTap: () => pushScreen(context, const EditProfileScreen()),
             ),
-          if (joins)
-            _MenuRow(
-              icon: 'community',
-              title: 'Communities and activity',
-              detail:
-                  '${plural(state.myGroups.length, 'group')} · ${plural(state.myDiscussions.length + state.myReplyCount, 'post')}',
-              onTap: () => pushScreen(context, const MyActivityScreen()),
-            ),
-        ]),
+            if (ownsVehicle)
+              _MenuRow(
+                icon: 'car',
+                title: 'My EV',
+                detail: me.vehicle == null
+                    ? 'Add your vehicle and charging preferences'
+                    : '${me.vehicle!.name} · charge to ${me.chargeToPct}%, keep ${me.reservePct}%',
+                onTap: () => pushScreen(context, const VehicleScreen()),
+              ),
+            if (joins)
+              _MenuRow(
+                icon: 'community',
+                title: 'Communities and activity',
+                detail:
+                    '${plural(state.myGroups.length, 'group')} · ${plural(state.myDiscussions.length + state.myReplyCount, 'post')}',
+                onTap: () => pushScreen(context, const MyActivityScreen()),
+              ),
+          ],
+        ),
         const SizedBox(height: 12),
-        _MenuGroup(rows: [
-          _MenuRow(
-            icon: 'notifications',
-            title: 'Notifications',
-            detail: _summary({
-              'Community': me.notifyCommunity,
-              'Events': me.notifyEvents,
-              'Polls': me.notifyPolls,
-            }),
-            onTap: () =>
-                pushScreen(context, const NotificationSettingsScreen()),
-          ),
-          _MenuRow(
-            icon: 'lock',
-            title: 'Privacy',
-            detail: 'What other members can see',
-            onTap: () => pushScreen(context, const PrivacyScreen()),
-          ),
-          _MenuRow(
-            icon: 'shield',
-            title: 'Password and security',
-            detail: 'Change your password',
-            onTap: () => pushScreen(context, const ChangePasswordScreen()),
-          ),
-        ]),
-        const SizedBox(height: 12),
-        _MenuGroup(rows: [
-          if (!state.isRemote)
+        _MenuGroup(
+          rows: [
             _MenuRow(
-              icon: 'profile',
-              title: 'Switch sample account',
-              onTap: () => _switchAccount(context),
+              icon: 'notifications',
+              title: 'Notifications',
+              detail: _summary({
+                'Community': me.notifyCommunity,
+                'Events': me.notifyEvents,
+                'Polls': me.notifyPolls,
+              }),
+              onTap: () =>
+                  pushScreen(context, const NotificationSettingsScreen()),
             ),
-          _MenuRow(
-            icon: 'logout',
-            title: 'Sign out',
-            danger: true,
-            onTap: () async {
-              final ok = await confirmAction(
-                context,
-                title: 'Sign out?',
-                message: 'You can sign back in at any time.',
-                confirmLabel: 'Sign out',
-              );
-              if (ok) state.signOut();
-            },
-          ),
-        ]),
+            _MenuRow(
+              icon: 'lock',
+              title: 'Privacy',
+              detail: 'What other members can see',
+              onTap: () => pushScreen(context, const PrivacyScreen()),
+            ),
+            _MenuRow(
+              icon: 'shield',
+              title: 'Password and security',
+              detail: 'Change your password',
+              onTap: () => pushScreen(context, const ChangePasswordScreen()),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _MenuGroup(
+          rows: [
+            if (!state.isRemote)
+              _MenuRow(
+                icon: 'profile',
+                title: 'Switch sample account',
+                onTap: () => _switchAccount(context),
+              ),
+            _MenuRow(
+              icon: 'logout',
+              title: 'Sign out',
+              danger: true,
+              onTap: () async {
+                final ok = await confirmAction(
+                  context,
+                  title: 'Sign out?',
+                  message: 'You can sign back in at any time.',
+                  confirmLabel: 'Sign out',
+                );
+                if (ok) state.signOut();
+              },
+            ),
+          ],
+        ),
         const SizedBox(height: 14),
         Text(
           state.isRemote
@@ -233,9 +249,11 @@ class ProfileScreen extends StatelessWidget {
       title: 'Switch sample account',
       options: state.demoAccounts,
       label: (u) => u.name,
-      subtitle: (u) => u.role == PlatformRole.member &&
+      subtitle: (u) =>
+          u.role == PlatformRole.member &&
               state.communities.any(
-                  (c) => !c.isTribe && c.members[u.id] == GroupRole.leader)
+                (c) => !c.isTribe && c.members[u.id] == GroupRole.leader,
+              )
           ? 'Community leader'
           : u.role.label,
       selected: state.me,
@@ -290,23 +308,31 @@ class _MenuRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 13),
         child: Row(
           children: [
-            AppIcon(icon,
-                size: 19, color: danger ? AppColors.danger : AppColors.skyDeep),
+            AppIcon(
+              icon,
+              size: 19,
+              color: danger ? AppColors.danger : AppColors.skyDeep,
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: color)),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: color,
+                    ),
+                  ),
                   if (detail != null)
-                    Text(detail!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      detail!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                 ],
               ),
             ),

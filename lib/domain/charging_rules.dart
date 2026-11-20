@@ -15,10 +15,15 @@ class Geo {
 
   /// Straight-line distance by the haversine formula.
   static double haversineKm(
-      double lat1, double lng1, double lat2, double lng2) {
+    double lat1,
+    double lng1,
+    double lat2,
+    double lng2,
+  ) {
     final dLat = _rad(lat2 - lat1);
     final dLng = _rad(lng2 - lng1);
-    final a = math.pow(math.sin(dLat / 2), 2) +
+    final a =
+        math.pow(math.sin(dLat / 2), 2) +
         math.cos(_rad(lat1)) *
             math.cos(_rad(lat2)) *
             math.pow(math.sin(dLng / 2), 2);
@@ -244,9 +249,14 @@ class ChargingRules {
   }) {
     final range = remainingRangeKm(vehicle, batteryPct);
     final compatibleStations =
-        stations.where((s) => compatible(vehicle, s)).toList()
-          ..sort((a, b) => Geo.haversineKm(lat, lng, a.lat, a.lng)
-              .compareTo(Geo.haversineKm(lat, lng, b.lat, b.lng)));
+        stations.where((s) => compatible(vehicle, s)).toList()..sort(
+          (a, b) => Geo.haversineKm(
+            lat,
+            lng,
+            a.lat,
+            a.lng,
+          ).compareTo(Geo.haversineKm(lat, lng, b.lat, b.lng)),
+        );
 
     final nearest = compatibleStations
         .where((s) => Geo.haversineKm(lat, lng, s.lat, s.lng) <= range / 2)
@@ -314,21 +324,34 @@ class ChargingRules {
       );
     }
 
-    final candidates = stations
-        .where((s) =>
-            compatible(vehicle, s) &&
-            Geo.distanceToSegmentKm(s.lat, s.lng, lat, lng, destination.lat,
-                    destination.lng) <=
-                stopCorridorKm)
-        .map((s) => evaluate(vehicle, batteryPct, lat, lng, s, now))
-        .toList()
-      ..sort(compare);
+    final candidates =
+        stations
+            .where(
+              (s) =>
+                  compatible(vehicle, s) &&
+                  Geo.distanceToSegmentKm(
+                        s.lat,
+                        s.lng,
+                        lat,
+                        lng,
+                        destination.lat,
+                        destination.lng,
+                      ) <=
+                      stopCorridorKm,
+            )
+            .map((s) => evaluate(vehicle, batteryPct, lat, lng, s, now))
+            .toList()
+          ..sort(compare);
 
     for (final option in candidates) {
       final s = option.station;
       final toStop = option.roadKm;
-      final fromStop =
-          Geo.roadKm(s.lat, s.lng, destination.lat, destination.lng);
+      final fromStop = Geo.roadKm(
+        s.lat,
+        s.lng,
+        destination.lat,
+        destination.lng,
+      );
       final rangeAfterCharge = remainingRangeKm(vehicle, chargeToPct);
       if (range >= toStop && rangeAfterCharge >= fromStop) {
         return TripPlan(
@@ -344,6 +367,9 @@ class ChargingRules {
       }
     }
     return TripPlan(
-        result: TripResult.notFeasible, roadKm: road, rangeKm: range);
+      result: TripResult.notFeasible,
+      roadKm: road,
+      rangeKm: range,
+    );
   }
 }

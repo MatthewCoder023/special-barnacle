@@ -29,14 +29,22 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     final here = state.location;
-    final category =
-        _category == 0 ? null : ProviderCategory.values[_category - 1];
+    final category = _category == 0
+        ? null
+        : ProviderCategory.values[_category - 1];
     // Providers have no status reports, so they are ranked by travel time.
-    final list = state.directory
-        .where((p) => category == null || p.category == category)
-        .toList()
-      ..sort((a, b) => Geo.roadKm(here.lat, here.lng, a.lat, a.lng)
-          .compareTo(Geo.roadKm(here.lat, here.lng, b.lat, b.lng)));
+    final list =
+        state.directory
+            .where((p) => category == null || p.category == category)
+            .toList()
+          ..sort(
+            (a, b) => Geo.roadKm(
+              here.lat,
+              here.lng,
+              a.lat,
+              a.lng,
+            ).compareTo(Geo.roadKm(here.lat, here.lng, b.lat, b.lng)),
+          );
     final text = Theme.of(context).textTheme;
 
     return TabPage(
@@ -80,7 +88,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
             children: [
               if (list.isEmpty)
                 const EmptyState(
-                    icon: 'wrench', title: 'No providers in this category'),
+                  icon: 'wrench',
+                  title: 'No providers in this category',
+                ),
               for (final (i, p) in list.indexed)
                 FadeIn(
                   key: ValueKey(p.id),
@@ -133,8 +143,10 @@ class ProviderCard extends StatelessWidget {
               style: text.bodySmall,
             ),
             const SizedBox(height: 8),
-            Text('Serves ${p.brands.join(', ')}',
-                style: const TextStyle(fontSize: 13)),
+            Text(
+              'Serves ${p.brands.join(', ')}',
+              style: const TextStyle(fontSize: 13),
+            ),
             const SizedBox(height: 10),
             Wrap(
               spacing: 6,
@@ -142,8 +154,11 @@ class ProviderCard extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 if (p.status == ApprovalStatus.approved)
-                  const Tag('Verified provider',
-                      tone: Tone.success, icon: 'check'),
+                  const Tag(
+                    'Verified provider',
+                    tone: Tone.success,
+                    icon: 'check',
+                  ),
                 if (p.recommendedBy.isNotEmpty)
                   Tag(
                     'Recommended by ${plural(p.recommendedBy.length, 'tribe')}',
@@ -151,8 +166,11 @@ class ProviderCard extends StatelessWidget {
                     icon: 'flag',
                   ),
                 if (count > 0)
-                  Tag('${rating.toStringAsFixed(1)} · ${plural(count, 'review')}',
-                      tone: Tone.neutral, icon: 'star'),
+                  Tag(
+                    '${rating.toStringAsFixed(1)} · ${plural(count, 'review')}',
+                    tone: Tone.neutral,
+                    icon: 'star',
+                  ),
               ],
             ),
           ],

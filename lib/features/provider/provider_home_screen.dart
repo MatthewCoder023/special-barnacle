@@ -52,24 +52,27 @@ class ProviderHomeScreen extends StatelessWidget {
           children: [
             Expanded(
               child: StatTile(
-                  icon: 'store',
-                  value: '${listings.length}',
-                  label: 'Listings'),
+                icon: 'store',
+                value: '${listings.length}',
+                label: 'Listings',
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: StatTile(
-                  icon: 'star',
-                  value: reviews.isEmpty ? '–' : average.toStringAsFixed(1),
-                  label: 'Average rating',
-                  pink: true),
+                icon: 'star',
+                value: reviews.isEmpty ? '–' : average.toStringAsFixed(1),
+                label: 'Average rating',
+                pink: true,
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: StatTile(
-                  icon: 'chat',
-                  value: '${reviews.length}',
-                  label: 'Reviews'),
+                icon: 'chat',
+                value: '${reviews.length}',
+                label: 'Reviews',
+              ),
             ),
           ],
         ),
@@ -87,8 +90,8 @@ class ProviderHomeScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: AppCard(
-                onTap: () => pushScreen(
-                    context, ProviderDetailScreen(providerId: p.id)),
+                onTap: () =>
+                    pushScreen(context, ProviderDetailScreen(providerId: p.id)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -101,15 +104,20 @@ class ProviderHomeScreen extends StatelessWidget {
                             onTap: () => _edit(context, p),
                             child: const Padding(
                               padding: EdgeInsets.all(6),
-                              child: AppIcon('edit',
-                                  size: 17, color: AppColors.skyDeep),
+                              child: AppIcon(
+                                'edit',
+                                size: 17,
+                                color: AppColors.skyDeep,
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    Text('${p.category.label} · ${p.address}',
-                        style: text.bodySmall),
+                    Text(
+                      '${p.category.label} · ${p.address}',
+                      style: text.bodySmall,
+                    ),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 6,
@@ -117,14 +125,18 @@ class ProviderHomeScreen extends StatelessWidget {
                       children: [
                         switch (p.status) {
                           ApprovalStatus.approved => const Tag(
-                              'Verified and listed',
-                              tone: Tone.success,
-                              icon: 'check'),
+                            'Verified and listed',
+                            tone: Tone.success,
+                            icon: 'check',
+                          ),
                           ApprovalStatus.pending => const Tag(
-                              'Waiting for admin verification',
-                              tone: Tone.warning),
-                          ApprovalStatus.rejected =>
-                            const Tag('Not approved', tone: Tone.danger),
+                            'Waiting for admin verification',
+                            tone: Tone.warning,
+                          ),
+                          ApprovalStatus.rejected => const Tag(
+                            'Not approved',
+                            tone: Tone.danger,
+                          ),
                         },
                         if (p.recommendedBy.isNotEmpty)
                           Tag(
@@ -204,12 +216,15 @@ class _ListingForm extends StatefulWidget {
 
 class _ListingFormState extends State<_ListingForm> {
   late final _name = TextEditingController(text: widget.listing?.name);
-  late final _description =
-      TextEditingController(text: widget.listing?.description);
-  late final _brands =
-      TextEditingController(text: widget.listing?.brands.join(', '));
-  late final _services =
-      TextEditingController(text: widget.listing?.services.join(', '));
+  late final _description = TextEditingController(
+    text: widget.listing?.description,
+  );
+  late final _brands = TextEditingController(
+    text: widget.listing?.brands.join(', '),
+  );
+  late final _services = TextEditingController(
+    text: widget.listing?.services.join(', '),
+  );
   late final _address = TextEditingController(text: widget.listing?.address);
   late final _city = TextEditingController(text: widget.listing?.city);
   late final _contact = TextEditingController(text: widget.listing?.contact);
@@ -219,7 +234,13 @@ class _ListingFormState extends State<_ListingForm> {
   @override
   void dispose() {
     for (final c in [
-      _name, _description, _brands, _services, _address, _city, _contact,
+      _name,
+      _description,
+      _brands,
+      _services,
+      _address,
+      _city,
+      _contact,
     ]) {
       c.dispose();
     }
@@ -234,16 +255,18 @@ class _ListingFormState extends State<_ListingForm> {
 
   @override
   Widget build(BuildContext context) {
-    final ready = _name.text.trim().isNotEmpty &&
+    final ready =
+        _name.text.trim().isNotEmpty &&
         _address.text.trim().isNotEmpty &&
         _split(_services).isNotEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppField(
-            controller: _name,
-            label: 'Business name',
-            onChanged: (_) => setState(() {})),
+          controller: _name,
+          label: 'Business name',
+          onChanged: (_) => setState(() {}),
+        ),
         const FieldLabel('Category'),
         Wrap(
           spacing: 8,
@@ -260,30 +283,35 @@ class _ListingFormState extends State<_ListingForm> {
         const SizedBox(height: 14),
         AppField(controller: _description, label: 'Description', maxLines: 3),
         AppField(
-            controller: _services,
-            label: 'Services or products',
-            hint: 'Separate with commas',
-            onChanged: (_) => setState(() {})),
+          controller: _services,
+          label: 'Services or products',
+          hint: 'Separate with commas',
+          onChanged: (_) => setState(() {}),
+        ),
         AppField(
-            controller: _brands,
-            label: 'Vehicle brands served',
-            hint: 'Separate with commas'),
+          controller: _brands,
+          label: 'Vehicle brands served',
+          hint: 'Separate with commas',
+        ),
         AppField(
-            controller: _address,
-            label: 'Address',
-            onChanged: (_) => setState(() {})),
+          controller: _address,
+          label: 'Address',
+          onChanged: (_) => setState(() {}),
+        ),
         AppField(controller: _city, label: 'City'),
         AppField(
-            controller: _contact,
-            label: 'Contact number',
-            keyboardType: TextInputType.phone),
+          controller: _contact,
+          label: 'Contact number',
+          keyboardType: TextInputType.phone,
+        ),
         AnimatedSwitcher(
           duration: AppMotion.of(context, AppMotion.fast),
           child: widget.listing == null
               ? const Padding(
                   padding: EdgeInsets.only(bottom: 12),
                   child: NoticeBox(
-                      'New listings are checked by the platform administrator before they appear in the directory.'),
+                    'New listings are checked by the platform administrator before they appear in the directory.',
+                  ),
                 )
               : const SizedBox.shrink(),
         ),
@@ -294,22 +322,24 @@ class _ListingFormState extends State<_ListingForm> {
               ? null
               : () {
                   context.read<AppState>().saveListing(
-                        existing: widget.listing,
-                        name: _name.text.trim(),
-                        category: _category,
-                        description: _description.text.trim(),
-                        brands: _split(_brands).isEmpty
-                            ? ['All brands']
-                            : _split(_brands),
-                        services: _split(_services),
-                        address: _address.text.trim(),
-                        city: _city.text.trim(),
-                        contact: _contact.text.trim(),
-                      );
+                    existing: widget.listing,
+                    name: _name.text.trim(),
+                    category: _category,
+                    description: _description.text.trim(),
+                    brands: _split(_brands).isEmpty
+                        ? ['All brands']
+                        : _split(_brands),
+                    services: _split(_services),
+                    address: _address.text.trim(),
+                    city: _city.text.trim(),
+                    contact: _contact.text.trim(),
+                  );
                   Navigator.of(context).pop();
-                  widget.onDone(widget.listing == null
-                      ? 'Listing submitted for verification.'
-                      : 'Listing saved.');
+                  widget.onDone(
+                    widget.listing == null
+                        ? 'Listing submitted for verification.'
+                        : 'Listing saved.',
+                  );
                 },
         ),
       ],

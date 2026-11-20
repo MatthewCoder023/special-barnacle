@@ -123,7 +123,11 @@ class _Decision extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: AppButton(label: approveLabel, small: true, onTap: onApprove),
+            child: AppButton(
+              label: approveLabel,
+              small: true,
+              onTap: onApprove,
+            ),
           ),
         ],
       ),
@@ -168,8 +172,10 @@ class _Approvals extends StatelessWidget {
                     style: text.bodySmall,
                   ),
                   const SizedBox(height: 8),
-                  Text(c.description,
-                      style: const TextStyle(color: AppColors.inkSoft)),
+                  Text(
+                    c.description,
+                    style: const TextStyle(color: AppColors.inkSoft),
+                  ),
                   const SizedBox(height: 8),
                   const NoticeBox(
                     'Check that the name does not impersonate an existing club before approving.',
@@ -182,8 +188,7 @@ class _Approvals extends StatelessWidget {
                     },
                     onDecline: () {
                       state.decideCommunity(c, approve: false);
-                      showToast(context, '${c.name} declined.',
-                          success: false);
+                      showToast(context, '${c.name} declined.', success: false);
                     },
                   ),
                 ],
@@ -208,8 +213,10 @@ class _Approvals extends StatelessWidget {
                     style: text.bodySmall,
                   ),
                   const SizedBox(height: 8),
-                  Text('Services: ${p.services.join(', ')}',
-                      style: const TextStyle(color: AppColors.inkSoft)),
+                  Text(
+                    'Services: ${p.services.join(', ')}',
+                    style: const TextStyle(color: AppColors.inkSoft),
+                  ),
                   _Decision(
                     approveLabel: 'Verify',
                     onApprove: () {
@@ -218,8 +225,7 @@ class _Approvals extends StatelessWidget {
                     },
                     onDecline: () {
                       state.decideProvider(p, approve: false);
-                      showToast(context, '${p.name} declined.',
-                          success: false);
+                      showToast(context, '${p.name} declined.', success: false);
                     },
                   ),
                 ],
@@ -260,15 +266,22 @@ class _Verifications extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Avatar(u.initials, imageUrl: u.avatarUrl, imageBytes: u.avatarBytes),
+                      Avatar(
+                        u.initials,
+                        imageUrl: u.avatarUrl,
+                        imageBytes: u.avatarBytes,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(u.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600)),
+                            Text(
+                              u.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             Text(
                               '${u.vehicle?.name ?? 'No vehicle'} · ${u.region}',
                               style: Theme.of(context).textTheme.bodySmall,
@@ -279,8 +292,10 @@ class _Verifications extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  const InfoRow('document',
-                      'Proof of ownership submitted (held in private storage)'),
+                  const InfoRow(
+                    'document',
+                    'Proof of ownership submitted (held in private storage)',
+                  ),
                   _Decision(
                     approveLabel: 'Verify owner',
                     onApprove: () {
@@ -289,8 +304,11 @@ class _Verifications extends StatelessWidget {
                     },
                     onDecline: () {
                       state.decideVerification(u, approve: false);
-                      showToast(context, 'Verification declined.',
-                          success: false);
+                      showToast(
+                        context,
+                        'Verification declined.',
+                        success: false,
+                      );
                     },
                   ),
                 ],
@@ -310,9 +328,11 @@ class _Moderation extends StatelessWidget {
     final state = context.watch<AppState>();
     final list = state.reportsForAdmin;
     final decided = state.reports
-        .where((r) =>
-            r.status == ReportStatus.removed ||
-            r.status == ReportStatus.dismissed)
+        .where(
+          (r) =>
+              r.status == ReportStatus.removed ||
+              r.status == ReportStatus.dismissed,
+        )
         .toList();
     final text = Theme.of(context).textTheme;
     return Column(
@@ -322,8 +342,7 @@ class _Moderation extends StatelessWidget {
           const EmptyState(
             icon: 'flag',
             title: 'Moderation queue is clear',
-            message:
-                'Reports on reviews, and reports that community officers escalate, come here for a final decision.',
+            message: 'Reports on reviews, and reports that community officers escalate, come here for a final decision.',
           ),
         for (final r in list)
           Padding(
@@ -392,15 +411,18 @@ class _Reference extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(child: Text(d.name, style: text.titleSmall)),
-                        Text(d.value,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w600)),
+                        Text(
+                          d.value,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 6),
                     Text('Source: ${d.source}', style: text.bodySmall),
-                    Text('Collected ${fmtDate(d.collected)}',
-                        style: text.bodySmall),
+                    Text(
+                      'Collected ${fmtDate(d.collected)}',
+                      style: text.bodySmall,
+                    ),
                   ],
                 ),
               ),
@@ -435,8 +457,7 @@ class _Audit extends StatelessWidget {
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(top: 2),
-                    child:
-                        AppIcon('list', size: 16, color: AppColors.inkFaint),
+                    child: AppIcon('list', size: 16, color: AppColors.inkFaint),
                   ),
                   const SizedBox(width: 10),
                   Expanded(

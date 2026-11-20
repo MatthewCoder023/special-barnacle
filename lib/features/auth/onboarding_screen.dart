@@ -37,9 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final remote = context.read<AppState>().isRemote;
     pushScreen(
       context,
-      remote
-          ? AuthScreen(startWithSignIn: signIn)
-          : const SignInScreen(),
+      remote ? AuthScreen(startWithSignIn: signIn) : const SignInScreen(),
     );
   }
 
@@ -105,8 +103,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       demo: const _CommunityDemo(),
                       title: 'Find your',
                       accent: 'people.',
-                      body:
-                          'Join EV communities and the tribes inside them, by model, region or interest.',
+                      body: 'Join EV communities and the tribes inside them, by model, region or interest.',
                     ),
                     _Slide(
                       controller: _pages,
@@ -114,8 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       demo: const _EventDemo(),
                       title: 'Drive',
                       accent: 'together.',
-                      body:
-                          'RSVP with your vehicle and battery level, and see if you can make the trip before you leave.',
+                      body: 'RSVP with your vehicle and battery level, and see if you can make the trip before you leave.',
                     ),
                     _Slide(
                       controller: _pages,
@@ -123,8 +119,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       demo: const _RangeDemo(),
                       title: 'Know before',
                       accent: 'you go.',
-                      body:
-                          'Compatible chargers, range checks and route planning for your own EV.',
+                      body: 'Compatible chargers, range checks and route planning for your own EV.',
                     ),
                   ],
                 ),
@@ -207,14 +202,17 @@ class _Slide extends StatelessWidget {
             child: AnimatedBuilder(
               animation: controller,
               builder: (context, child) {
-                final page = controller.hasClients &&
-                        controller.position.haveDimensions
+                final page =
+                    controller.hasClients && controller.position.haveDimensions
                     ? controller.page ?? index.toDouble()
                     : index.toDouble();
-                final shift =
-                    AppMotion.reduced(context) ? 0.0 : (page - index) * 70;
+                final shift = AppMotion.reduced(context)
+                    ? 0.0
+                    : (page - index) * 70;
                 return Transform.translate(
-                    offset: Offset(shift, 0), child: child);
+                  offset: Offset(shift, 0),
+                  child: child,
+                );
               },
               child: Center(
                 child: SingleChildScrollView(
@@ -229,15 +227,15 @@ class _Slide extends StatelessWidget {
               text: '$title ',
               children: [
                 TextSpan(
-                    text: accent,
-                    style: const TextStyle(color: AppColors.pink)),
+                  text: accent,
+                  style: const TextStyle(color: AppColors.pink),
+                ),
               ],
               style: text.headlineLarge?.copyWith(fontSize: 32),
             ),
           ),
           const SizedBox(height: 10),
-          Text(body,
-              style: text.bodyLarge?.copyWith(color: AppColors.inkSoft)),
+          Text(body, style: text.bodyLarge?.copyWith(color: AppColors.inkSoft)),
           const SizedBox(height: 22),
         ],
       ),
@@ -267,17 +265,17 @@ class _CommunityDemoState extends State<_CommunityDemo> {
             alignment: Alignment.centerRight,
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: glassCard(radius: 18),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AppIcon('flag', size: 16, color: AppColors.pinkDeep),
                   SizedBox(width: 8),
-                  Text('Weekend Convoy Tribe',
-                      style: TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w600)),
+                  Text(
+                    'Weekend Convoy Tribe',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
             ),
@@ -300,19 +298,22 @@ class _CommunityDemoState extends State<_CommunityDemo> {
                         color: AppColors.skySoft,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const AppIcon('community',
-                          color: AppColors.skyDeep),
+                      child: const AppIcon(
+                        'community',
+                        color: AppColors.skyDeep,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Metro EV Owners Circle',
-                              style: text.titleMedium),
+                          Text(
+                            'Metro EV Owners Circle',
+                            style: text.titleMedium,
+                          ),
                           AnimatedSwitcher(
-                            duration:
-                                AppMotion.of(context, AppMotion.standard),
+                            duration: AppMotion.of(context, AppMotion.standard),
                             layoutBuilder: (current, previous) => Stack(
                               alignment: Alignment.centerLeft,
                               children: [...previous, ?current],
@@ -358,17 +359,17 @@ class _CommunityDemoState extends State<_CommunityDemo> {
             alignment: Alignment.centerLeft,
             child: Container(
               margin: const EdgeInsets.only(top: 12),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: glassCard(radius: 18),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AppIcon('vote', size: 16, color: AppColors.skyDeep),
                   SizedBox(width: 8),
-                  Text('Poll: where to in December?',
-                      style: TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w600)),
+                  Text(
+                    'Poll: where to in December?',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
             ),
@@ -410,7 +411,10 @@ class _EventDemoState extends State<_EventDemo> {
             Text('Tagaytay Weekend Run', style: text.titleLarge),
             const SizedBox(height: 14),
             const RouteStrip(
-                from: 'BGC, Taguig', to: 'Tagaytay', via: 'Sta. Rosa'),
+              from: 'BGC, Taguig',
+              to: 'Tagaytay',
+              via: 'Sta. Rosa',
+            ),
             const SizedBox(height: 14),
             AnimatedSize(
               duration: AppMotion.of(context, AppMotion.standard),
@@ -473,7 +477,9 @@ class _RangeDemoState extends State<_RangeDemo> {
                   TextSpan(
                     text: '${_battery.round()}%',
                     style: const TextStyle(
-                        fontSize: 40, fontWeight: FontWeight.w700),
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   TextSpan(
                     text: '   about ${range.round()} km',
@@ -497,45 +503,51 @@ class _RangeDemoState extends State<_RangeDemo> {
               ),
             ),
             for (final place in trips)
-              Builder(builder: (context) {
-                final check = ChargingRules.roundTrip(
-                  vehicle: vehicle,
-                  batteryPct: _battery,
-                  lat: here.lat,
-                  lng: here.lng,
-                  destLat: place.lat,
-                  destLng: place.lng,
-                );
-                return Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.75),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '${place.name.split(',').first} and back · ${km(check.roadKm * 2)}',
-                          style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
+              Builder(
+                builder: (context) {
+                  final check = ChargingRules.roundTrip(
+                    vehicle: vehicle,
+                    batteryPct: _battery,
+                    lat: here.lat,
+                    lng: here.lng,
+                    destLat: place.lat,
+                    destLng: place.lng,
+                  );
+                  return Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.75),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${place.name.split(',').first} and back · ${km(check.roadKm * 2)}',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                      ),
-                      AnimatedSwitcher(
-                        duration: AppMotion.of(context, AppMotion.fast),
-                        child: Tag(
-                          check.passes ? 'In range' : 'Needs a charge',
-                          key: ValueKey(check.passes),
-                          tone: check.passes ? Tone.success : Tone.danger,
-                          icon: check.passes ? 'check' : 'charging',
+                        AnimatedSwitcher(
+                          duration: AppMotion.of(context, AppMotion.fast),
+                          child: Tag(
+                            check.passes ? 'In range' : 'Needs a charge',
+                            key: ValueKey(check.passes),
+                            tone: check.passes ? Tone.success : Tone.danger,
+                            icon: check.passes ? 'check' : 'charging',
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+                      ],
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),

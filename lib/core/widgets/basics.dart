@@ -22,8 +22,7 @@ class AppIcon extends StatelessWidget {
       'assets/icons/$name.svg',
       width: size,
       height: size,
-      colorFilter:
-          ColorFilter.mode(color ?? AppColors.ink, BlendMode.srcIn),
+      colorFilter: ColorFilter.mode(color ?? AppColors.ink, BlendMode.srcIn),
     );
   }
 }
@@ -265,8 +264,10 @@ class Tag extends StatelessWidget {
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration:
-          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -277,7 +278,10 @@ class Tag extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-                color: fg, fontSize: 11.5, fontWeight: FontWeight.w600),
+              color: fg,
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -319,10 +323,10 @@ class ChoicePill extends StatelessWidget {
           child: AnimatedDefaultTextStyle(
             duration: duration,
             style: DefaultTextStyle.of(context).style.copyWith(
-                  fontSize: 13.5,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                  color: selected ? AppColors.ink : AppColors.inkSoft,
-                ),
+              fontSize: 13.5,
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+              color: selected ? AppColors.ink : AppColors.inkSoft,
+            ),
             child: Text(label),
           ),
         ),
@@ -400,10 +404,10 @@ class _TextTab extends StatelessWidget {
                 duration: duration,
                 curve: AppMotion.move,
                 style: DefaultTextStyle.of(context).style.copyWith(
-                      fontSize: 15,
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                      color: selected ? AppColors.ink : AppColors.inkFaint,
-                    ),
+                  fontSize: 15,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: selected ? AppColors.ink : AppColors.inkFaint,
+                ),
                 child: Text(label),
               ),
               const SizedBox(height: 6),
@@ -464,14 +468,14 @@ class SegmentedTabs extends StatelessWidget {
                           duration: duration,
                           curve: AppMotion.move,
                           style: DefaultTextStyle.of(context).style.copyWith(
-                                fontSize: 15,
-                                fontWeight: i == index
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
-                                color: i == index
-                                    ? AppColors.ink
-                                    : AppColors.inkFaint,
-                              ),
+                            fontSize: 15,
+                            fontWeight: i == index
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            color: i == index
+                                ? AppColors.ink
+                                : AppColors.inkFaint,
+                          ),
                           child: Text(labels[i]),
                         ),
                       ),
@@ -652,9 +656,11 @@ class StatTile extends StatelessWidget {
               color: pink ? AppColors.pinkSoft : AppColors.skySoft,
               shape: BoxShape.circle,
             ),
-            child: AppIcon(icon,
-                size: 17,
-                color: pink ? AppColors.pinkDeep : AppColors.skyDeep),
+            child: AppIcon(
+              icon,
+              size: 17,
+              color: pink ? AppColors.pinkDeep : AppColors.skyDeep,
+            ),
           ),
           const SizedBox(height: 8),
           AnimatedSwitcher(
@@ -662,8 +668,7 @@ class StatTile extends StatelessWidget {
             child: Text(
               value,
               key: ValueKey(value),
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
           ),
           const SizedBox(height: 2),
@@ -671,7 +676,8 @@ class StatTile extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11.5),
+            style: Theme.of(context).textTheme.bodySmall
+                ?.copyWith(fontSize: 11.5),
           ),
         ],
       ),
@@ -702,18 +708,24 @@ class EmptyState extends StatelessWidget {
             height: 56,
             alignment: Alignment.center,
             decoration: const BoxDecoration(
-                color: AppColors.skySoft, shape: BoxShape.circle),
+              color: AppColors.skySoft,
+              shape: BoxShape.circle,
+            ),
             child: AppIcon(icon, size: 24, color: AppColors.skyDeep),
           ),
           const SizedBox(height: 14),
-          Text(title,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleSmall),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
           if (message != null) ...[
             const SizedBox(height: 6),
-            Text(message!,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              message!,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ],
         ],
       ),
@@ -745,7 +757,10 @@ class InfoRow extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                  fontSize: 13.5, color: color ?? AppColors.inkSoft, height: 1.4),
+                fontSize: 13.5,
+                color: color ?? AppColors.inkSoft,
+                height: 1.4,
+              ),
             ),
           ),
         ],
@@ -756,7 +771,12 @@ class InfoRow extends StatelessWidget {
 
 /// Banner for notices such as read-only access or estimates.
 class NoticeBox extends StatelessWidget {
-  const NoticeBox(this.text, {super.key, this.tone = Tone.sky, this.icon = 'info'});
+  const NoticeBox(
+    this.text, {
+    super.key,
+    this.tone = Tone.sky,
+    this.icon = 'info',
+  });
 
   final String text;
   final Tone tone;
@@ -774,8 +794,10 @@ class NoticeBox extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
-      decoration:
-          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -785,9 +807,14 @@ class NoticeBox extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(text,
-                style: const TextStyle(
-                    fontSize: 12.5, color: AppColors.ink, height: 1.4)),
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 12.5,
+                color: AppColors.ink,
+                height: 1.4,
+              ),
+            ),
           ),
         ],
       ),
@@ -808,10 +835,14 @@ class FadeIn extends StatefulWidget {
 }
 
 class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller =
-      AnimationController(vsync: this, duration: AppMotion.slow);
-  late final Animation<double> _curve =
-      CurvedAnimation(parent: _controller, curve: AppMotion.enter);
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: AppMotion.slow,
+  );
+  late final Animation<double> _curve = CurvedAnimation(
+    parent: _controller,
+    curve: AppMotion.enter,
+  );
 
   @override
   void initState() {
@@ -834,8 +865,10 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
     return FadeTransition(
       opacity: _curve,
       child: SlideTransition(
-        position: Tween(begin: const Offset(0, 0.04), end: Offset.zero)
-            .animate(_curve),
+        position: Tween(
+          begin: const Offset(0, 0.04),
+          end: Offset.zero,
+        ).animate(_curve),
         child: widget.child,
       ),
     );
@@ -866,15 +899,19 @@ class BarList extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(items[i].$1,
-                          style: const TextStyle(fontSize: 13)),
+                      child: Text(
+                        items[i].$1,
+                        style: const TextStyle(fontSize: 13),
+                      ),
                     ),
                     Text(
                       items[i].$2 is int
                           ? '${items[i].$2}'
                           : items[i].$2.toStringAsFixed(0),
                       style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w600),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -888,12 +925,12 @@ class BarList extends StatelessWidget {
                     child: AnimatedFractionallySizedBox(
                       duration: AppMotion.of(context, AppMotion.slow),
                       curve: AppMotion.move,
-                      widthFactor:
-                          max == 0 ? 0 : (items[i].$2 / max).clamp(0, 1).toDouble(),
+                      widthFactor: max == 0
+                          ? 0
+                          : (items[i].$2 / max).clamp(0, 1).toDouble(),
                       heightFactor: 1,
                       child: Container(
-                        color:
-                            i == pinkIndex ? AppColors.pink : AppColors.sky,
+                        color: i == pinkIndex ? AppColors.pink : AppColors.sky,
                       ),
                     ),
                   ),
@@ -929,9 +966,7 @@ class Stars extends StatelessWidget {
                 child: AppIcon(
                   'star',
                   size: size,
-                  color: i <= rating.round()
-                      ? AppColors.pink
-                      : AppColors.line,
+                  color: i <= rating.round() ? AppColors.pink : AppColors.line,
                 ),
               ),
             ),

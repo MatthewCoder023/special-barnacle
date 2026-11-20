@@ -23,9 +23,12 @@ class ProviderDetailScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     final p = state.providerById(providerId);
     if (p == null) {
-      return const DetailScaffold(title: 'Provider', children: [
-        EmptyState(icon: 'wrench', title: 'This listing is not available'),
-      ]);
+      return const DetailScaffold(
+        title: 'Provider',
+        children: [
+          EmptyState(icon: 'wrench', title: 'This listing is not available'),
+        ],
+      );
     }
     final here = state.location;
     final road = Geo.roadKm(here.lat, here.lng, p.lat, p.lng);
@@ -64,11 +67,17 @@ class ProviderDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InfoRow('pin', '${p.address} · about ${km(road)} away',
-                  color: AppColors.ink),
+              InfoRow(
+                'pin',
+                '${p.address} · about ${km(road)} away',
+                color: AppColors.ink,
+              ),
               InfoRow('phone', p.contact, color: AppColors.ink),
-              InfoRow('car', 'Brands served: ${p.brands.join(', ')}',
-                  color: AppColors.ink),
+              InfoRow(
+                'car',
+                'Brands served: ${p.brands.join(', ')}',
+                color: AppColors.ink,
+              ),
             ],
           ),
         ),
@@ -86,8 +95,10 @@ class ProviderDetailScreen extends StatelessWidget {
         if (endorsers.isNotEmpty || tribes.isNotEmpty) ...[
           const SectionHeader('Tribe recommendations'),
           if (endorsers.isEmpty)
-            Text('No tribe has recommended this provider yet.',
-                style: text.bodySmall)
+            Text(
+              'No tribe has recommended this provider yet.',
+              style: text.bodySmall,
+            )
           else
             Wrap(
               spacing: 6,

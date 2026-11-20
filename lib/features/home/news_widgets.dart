@@ -76,7 +76,9 @@ class SourceMark extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
-          color: AppColors.pinkSoft, shape: BoxShape.circle),
+        color: AppColors.pinkSoft,
+        shape: BoxShape.circle,
+      ),
       child: Text(
         source.isEmpty ? '?' : source[0].toUpperCase(),
         style: TextStyle(
@@ -108,7 +110,10 @@ class FeaturedArticleCard extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Hero(tag: 'news-${a.id}', child: NewsImage(article: a, radius: 0)),
+              Hero(
+                tag: 'news-${a.id}',
+                child: NewsImage(article: a, radius: 0),
+              ),
               // Darkens the lower part so the headline stays readable on any
               // photo.
               DecoratedBox(
@@ -140,9 +145,10 @@ class FeaturedArticleCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                color: AppColors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500),
+                              color: AppColors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                         if (a.isSample) const Tag('Sample', tone: Tone.warning),
@@ -164,8 +170,9 @@ class FeaturedArticleCard extends StatelessWidget {
                     Text(
                       timeAgo(a.publishedAt),
                       style: TextStyle(
-                          color: AppColors.white.withValues(alpha: 0.85),
-                          fontSize: 12.5),
+                        color: AppColors.white.withValues(alpha: 0.85),
+                        fontSize: 12.5,
+                      ),
                     ),
                   ],
                 ),
@@ -201,10 +208,12 @@ class ArticleRow extends StatelessWidget {
                 SourceMark(a.source),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(a.source,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.bodySmall?.copyWith(fontSize: 13)),
+                  child: Text(
+                    a.source,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: text.bodySmall?.copyWith(fontSize: 13),
+                  ),
                 ),
                 if (a.isSample) ...[
                   const Tag('Sample', tone: Tone.warning),
@@ -226,9 +235,10 @@ class ArticleRow extends StatelessWidget {
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 16.5,
-                            height: 1.3,
-                            fontWeight: FontWeight.w600),
+                          fontSize: 16.5,
+                          height: 1.3,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       if (a.summary.isNotEmpty) ...[
                         const SizedBox(height: 6),
@@ -237,9 +247,10 @@ class ArticleRow extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 13.5,
-                              height: 1.4,
-                              color: AppColors.inkSoft),
+                            fontSize: 13.5,
+                            height: 1.4,
+                            color: AppColors.inkSoft,
+                          ),
                         ),
                       ],
                     ],
@@ -250,7 +261,9 @@ class ArticleRow extends StatelessWidget {
                   width: 76,
                   height: 76,
                   child: Hero(
-                      tag: 'news-${a.id}', child: NewsImage(article: a)),
+                    tag: 'news-${a.id}',
+                    child: NewsImage(article: a),
+                  ),
                 ),
               ],
             ),
@@ -316,27 +329,39 @@ class ArticleScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(a.source,
-                      style: const TextStyle(fontWeight: FontWeight.w600)),
-                  Text(fmtDateTime(a.publishedAt),
-                      style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    a.source,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    fmtDateTime(a.publishedAt),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ],
               ),
             ),
-            Tag(a.philippines ? 'Philippines' : 'World',
-                tone: a.philippines ? Tone.sky : Tone.neutral),
+            Tag(
+              a.philippines ? 'Philippines' : 'World',
+              tone: a.philippines ? Tone.sky : Tone.neutral,
+            ),
           ],
         ),
         const SizedBox(height: 18),
         Text(
           a.title,
           style: serif.copyWith(
-              fontSize: 28, height: 1.2, fontWeight: FontWeight.w700),
+            fontSize: 28,
+            height: 1.2,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const SizedBox(height: 18),
         AspectRatio(
           aspectRatio: 16 / 9,
-          child: Hero(tag: 'news-${a.id}', child: NewsImage(article: a)),
+          child: Hero(
+            tag: 'news-${a.id}',
+            child: NewsImage(article: a),
+          ),
         ),
         const SizedBox(height: 20),
         if (a.summary.isNotEmpty)

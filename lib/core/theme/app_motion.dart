@@ -56,8 +56,10 @@ Future<T?> pushScreen<T>(BuildContext context, Widget screen) {
         final fade = FadeTransition(opacity: curved, child: child);
         if (reduced) return fade;
         return SlideTransition(
-          position: Tween(begin: const Offset(0, 0.03), end: Offset.zero)
-              .animate(curved),
+          position: Tween(
+            begin: const Offset(0, 0.03),
+            end: Offset.zero,
+          ).animate(curved),
           child: fade,
         );
       },

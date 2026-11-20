@@ -29,11 +29,14 @@ class AppShell extends StatefulWidget {
   /// Switches to the tab with [label] from any screen below the shell.
   /// [communityView] also picks a view inside the Community tab, for
   /// example 'Events'.
-  static void goTo(BuildContext context, String label,
-          {String? communityView}) =>
-      context
-          .findAncestorStateOfType<_AppShellState>()
-          ?._goTo(label, communityView);
+  static void goTo(
+    BuildContext context,
+    String label, {
+    String? communityView,
+  }) => context.findAncestorStateOfType<_AppShellState>()?._goTo(
+    label,
+    communityView,
+  );
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -55,28 +58,28 @@ class _AppShellState extends State<AppShell> {
   late final _communityScreen = CommunitiesScreen(viewRequest: _communityView);
 
   List<(AppTab, Widget)> _tabs(PlatformRole role) => switch (role) {
-        PlatformRole.provider => const [
-            (AppTab('store', 'Listings'), ProviderHomeScreen()),
-            (_route, RouteScreen()),
-            (_home, HomeScreen()),
-            (_services, ServicesScreen()),
-            (_profile, ProfileScreen()),
-          ],
-        PlatformRole.admin => [
-            const (AppTab('shield', 'Admin'), AdminScreen()),
-            (_community, _communityScreen),
-            const (_home, HomeScreen()),
-            const (_route, RouteScreen()),
-            const (_profile, ProfileScreen()),
-          ],
-        _ => [
-            (_community, _communityScreen),
-            const (_route, RouteScreen()),
-            const (_home, HomeScreen()),
-            const (_services, ServicesScreen()),
-            const (_profile, ProfileScreen()),
-          ],
-      };
+    PlatformRole.provider => const [
+      (AppTab('store', 'Listings'), ProviderHomeScreen()),
+      (_route, RouteScreen()),
+      (_home, HomeScreen()),
+      (_services, ServicesScreen()),
+      (_profile, ProfileScreen()),
+    ],
+    PlatformRole.admin => [
+      const (AppTab('shield', 'Admin'), AdminScreen()),
+      (_community, _communityScreen),
+      const (_home, HomeScreen()),
+      const (_route, RouteScreen()),
+      const (_profile, ProfileScreen()),
+    ],
+    _ => [
+      (_community, _communityScreen),
+      const (_route, RouteScreen()),
+      const (_home, HomeScreen()),
+      const (_services, ServicesScreen()),
+      const (_profile, ProfileScreen()),
+    ],
+  };
 
   void _goTo(String label, String? communityView) {
     final role = context.read<AppState>().me.role;

@@ -124,15 +124,17 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
           onChanged: (v) => setState(() => _verified = v),
         ),
         const SizedBox(height: 8),
-        Text('Membership criteria (optional)',
-            style: Theme.of(context).textTheme.titleSmall),
+        Text(
+          'Membership criteria (optional)',
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
         const SizedBox(height: 10),
         AppField(
-            controller: _model,
-            label: 'Vehicle model',
-            hint: 'e.g. BYD Dolphin'),
-        AppField(
-            controller: _region, label: 'Region', hint: 'e.g. Laguna'),
+          controller: _model,
+          label: 'Vehicle model',
+          hint: 'e.g. BYD Dolphin',
+        ),
+        AppField(controller: _region, label: 'Region', hint: 'e.g. Laguna'),
       ],
     );
   }

@@ -16,10 +16,10 @@ import 'station_detail_screen.dart';
 
 /// All destinations the tools can check: preset places, stations, providers.
 List<Place> _destinations(AppState state) => [
-      ...SeedData.places,
-      for (final s in state.stations) Place(s.name, s.lat, s.lng),
-      for (final p in state.directory) Place(p.name, p.lat, p.lng),
-    ];
+  ...SeedData.places,
+  for (final s in state.stations) Place(s.name, s.lat, s.lng),
+  for (final p in state.directory) Place(p.name, p.lat, p.lng),
+];
 
 class _DestinationField extends StatelessWidget {
   const _DestinationField({required this.value, required this.onPicked});
@@ -59,7 +59,8 @@ class _DestinationField extends StatelessWidget {
               child: Text(
                 value?.name ?? 'Choose a destination',
                 style: TextStyle(
-                    color: value == null ? AppColors.inkFaint : AppColors.ink),
+                  color: value == null ? AppColors.inkFaint : AppColors.ink,
+                ),
               ),
             ),
             const AppIcon('chevron', size: 16, color: AppColors.inkFaint),
@@ -122,7 +123,9 @@ class _RangeCheckScreenState extends State<RangeCheckScreen> {
         const _StartLine(),
         const SizedBox(height: 12),
         _DestinationField(
-            value: _dest, onPicked: (p) => setState(() => _dest = p)),
+          value: _dest,
+          onPicked: (p) => setState(() => _dest = p),
+        ),
         const SizedBox(height: 16),
         Swap(
           id: '${dest?.name}${check?.passes}',
@@ -130,8 +133,7 @@ class _RangeCheckScreenState extends State<RangeCheckScreen> {
               ? const EmptyState(
                   icon: 'battery',
                   title: 'Choose where you are going',
-                  message:
-                      'The check compares your remaining range with the road distance to the destination and back.',
+                  message: 'The check compares your remaining range with the road distance to the destination and back.',
                 )
               : AppCard(
                   color: check.passes
@@ -143,38 +145,47 @@ class _RangeCheckScreenState extends State<RangeCheckScreen> {
                     children: [
                       Row(
                         children: [
-                          AppIcon(check.passes ? 'check' : 'alert',
-                              color: check.passes
-                                  ? AppColors.success
-                                  : AppColors.danger),
+                          AppIcon(
+                            check.passes ? 'check' : 'alert',
+                            color: check.passes
+                                ? AppColors.success
+                                : AppColors.danger,
+                          ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               check.passes
                                   ? 'You can get there and back'
                                   : v.hasEngine
-                                      ? 'Not on electricity alone'
-                                      : 'Not enough range for the round trip',
+                                  ? 'Not on electricity alone'
+                                  : 'Not enough range for the round trip',
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 12),
-                      InfoRow('route',
-                          '${km(check.roadKm)} each way, ${km(check.roadKm * 2)} round trip',
-                          color: AppColors.ink),
-                      InfoRow('battery',
-                          'Remaining range about ${km(check.rangeKm)}',
-                          color: AppColors.ink),
                       InfoRow(
-                          'charging',
-                          'Battery about ${check.batteryOnArrival.round()}% on arrival and ${check.batteryAfterRoundTrip.round()}% after the round trip',
-                          color: AppColors.ink),
+                        'route',
+                        '${km(check.roadKm)} each way, ${km(check.roadKm * 2)} round trip',
+                        color: AppColors.ink,
+                      ),
+                      InfoRow(
+                        'battery',
+                        'Remaining range about ${km(check.rangeKm)}',
+                        color: AppColors.ink,
+                      ),
+                      InfoRow(
+                        'charging',
+                        'Battery about ${check.batteryOnArrival.round()}% on arrival and ${check.batteryAfterRoundTrip.round()}% after the round trip',
+                        color: AppColors.ink,
+                      ),
                       if (!check.passes && v.hasEngine)
-                        const InfoRow('info',
-                            'Your vehicle\'s engine can extend the range beyond the electric-only figure.',
-                            color: AppColors.ink),
+                        const InfoRow(
+                          'info',
+                          'Your vehicle\'s engine can extend the range beyond the electric-only figure.',
+                          color: AppColors.ink,
+                        ),
                     ],
                   ),
                 ),
@@ -229,14 +240,21 @@ class _TripCheckScreenState extends State<TripCheckScreen> {
                   : 'Open navigation with the stop',
               icon: 'route',
               expand: true,
-              onTap: () => openDirections(context, dest!.lat, dest.lng,
-                  viaLat: stop?.lat, viaLng: stop?.lng),
+              onTap: () => openDirections(
+                context,
+                dest!.lat,
+                dest.lng,
+                viaLat: stop?.lat,
+                viaLng: stop?.lng,
+              ),
             ),
       children: [
         const _StartLine(),
         const SizedBox(height: 12),
         _DestinationField(
-            value: _dest, onPicked: (p) => setState(() => _dest = p)),
+          value: _dest,
+          onPicked: (p) => setState(() => _dest = p),
+        ),
         const SizedBox(height: 14),
         FieldLabel('Charge to ${_chargeTo.round()}% at the stop'),
         Slider(
@@ -253,8 +271,7 @@ class _TripCheckScreenState extends State<TripCheckScreen> {
               ? const EmptyState(
                   icon: 'route',
                   title: 'Choose a destination',
-                  message:
-                      'If the trip is beyond your range, one compatible charging stop within 2 km of the route is suggested.',
+                  message: 'If the trip is beyond your range, one compatible charging stop within 2 km of the route is suggested.',
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,33 +286,33 @@ class _TripCheckScreenState extends State<TripCheckScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            switch (plan.result) {
-                              TripResult.direct =>
-                                'Feasible without charging',
-                              TripResult.withStop =>
-                                'Feasible with one charging stop',
-                              TripResult.notFeasible =>
-                                'Not feasible with one stop',
-                            },
-                            style: text.titleMedium,
-                          ),
+                          Text(switch (plan.result) {
+                            TripResult.direct => 'Feasible without charging',
+                            TripResult.withStop =>
+                              'Feasible with one charging stop',
+                            TripResult.notFeasible =>
+                              'Not feasible with one stop',
+                          }, style: text.titleMedium),
                           const SizedBox(height: 10),
                           InfoRow(
-                              'route',
-                              'About ${km(plan.roadKm)} by road; your range is about ${km(plan.rangeKm)}',
-                              color: AppColors.ink),
+                            'route',
+                            'About ${km(plan.roadKm)} by road; your range is about ${km(plan.rangeKm)}',
+                            color: AppColors.ink,
+                          ),
                           if (plan.result == TripResult.direct)
-                            InfoRow('battery',
-                                'About ${plan.batteryOnArrival.round()}% left on arrival',
-                                color: AppColors.ink),
+                            InfoRow(
+                              'battery',
+                              'About ${plan.batteryOnArrival.round()}% left on arrival',
+                              color: AppColors.ink,
+                            ),
                           if (plan.result == TripResult.notFeasible)
                             InfoRow(
-                                'info',
-                                v.hasEngine
-                                    ? 'No single stop near the route covers it on electricity; your engine can extend the range.'
-                                    : 'No compatible station within 2 km of the route can be reached and still get you to the destination. EVYAHE plans one stop at most.',
-                                color: AppColors.ink),
+                              'info',
+                              v.hasEngine
+                                  ? 'No single stop near the route covers it on electricity; your engine can extend the range.'
+                                  : 'No compatible station within 2 km of the route can be reached and still get you to the destination. EVYAHE plans one stop at most.',
+                              color: AppColors.ink,
+                            ),
                         ],
                       ),
                     ),
@@ -303,25 +320,37 @@ class _TripCheckScreenState extends State<TripCheckScreen> {
                       const SizedBox(height: 14),
                       AppCard(
                         onTap: () => pushScreen(
-                            context, StationDetailScreen(stationId: stop.id)),
+                          context,
+                          StationDetailScreen(stationId: stop.id),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Tag('Suggested charging stop',
-                                tone: Tone.pink, icon: 'charging'),
+                            const Tag(
+                              'Suggested charging stop',
+                              tone: Tone.pink,
+                              icon: 'charging',
+                            ),
                             const SizedBox(height: 10),
                             RouteStrip(
-                                from: here.name,
-                                to: dest!.name,
-                                via: stop.city),
+                              from: here.name,
+                              to: dest!.name,
+                              via: stop.city,
+                            ),
                             const SizedBox(height: 12),
                             Text(stop.name, style: text.titleSmall),
-                            InfoRow('route',
-                                '${km(plan.kmToStop)} to the stop, arriving at about ${plan.batteryAtStop.round()}%'),
-                            InfoRow('charging',
-                                'Charge to ${_chargeTo.round()}%, then ${km(plan.kmFromStop)} to the destination, arriving at about ${plan.batteryAtDestination.round()}%'),
-                            InfoRow('info',
-                                ChargingRules.condition(stop, state.now).label),
+                            InfoRow(
+                              'route',
+                              '${km(plan.kmToStop)} to the stop, arriving at about ${plan.batteryAtStop.round()}%',
+                            ),
+                            InfoRow(
+                              'charging',
+                              'Charge to ${_chargeTo.round()}%, then ${km(plan.kmFromStop)} to the destination, arriving at about ${plan.batteryAtDestination.round()}%',
+                            ),
+                            InfoRow(
+                              'info',
+                              ChargingRules.condition(stop, state.now).label,
+                            ),
                           ],
                         ),
                       ),
@@ -336,11 +365,16 @@ class _TripCheckScreenState extends State<TripCheckScreen> {
                         ],
                         pins: [
                           MapPin(
-                              lat: stop.lat,
-                              lng: stop.lng,
-                              label: stop.name,
-                              tone: Tone.pink),
-                          MapPin(lat: dest.lat, lng: dest.lng, label: dest.name),
+                            lat: stop.lat,
+                            lng: stop.lng,
+                            label: stop.name,
+                            tone: Tone.pink,
+                          ),
+                          MapPin(
+                            lat: dest.lat,
+                            lng: dest.lng,
+                            label: dest.name,
+                          ),
                         ],
                       ),
                     ],
@@ -403,8 +437,9 @@ class _CostComparisonScreenState extends State<CostComparisonScreen> {
       ('Public charging', result.public),
       ('Fuel only', result.fuel),
     ];
-    final cheapest = rows.indexWhere((r) =>
-        r.$2 == rows.map((x) => x.$2).reduce((a, b) => a < b ? a : b));
+    final cheapest = rows.indexWhere(
+      (r) => r.$2 == rows.map((x) => x.$2).reduce((a, b) => a < b ? a : b),
+    );
     final text = Theme.of(context).textTheme;
 
     return DetailScaffold(
@@ -436,9 +471,13 @@ class _CostComparisonScreenState extends State<CostComparisonScreen> {
                             const Tag('Lowest', tone: Tone.success),
                             const SizedBox(width: 8),
                           ],
-                          Text(peso(r.$2),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w700, fontSize: 16)),
+                          Text(
+                            peso(r.$2),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 6),
@@ -451,16 +490,16 @@ class _CostComparisonScreenState extends State<CostComparisonScreen> {
                           child: AnimatedFractionallySizedBox(
                             duration: AppMotion.of(context, AppMotion.fast),
                             curve: AppMotion.move,
-                            widthFactor: (r.$2 /
-                                    rows
-                                        .map((x) => x.$2)
-                                        .reduce((a, b) => a > b ? a : b))
-                                .clamp(0.02, 1.0)
-                                .toDouble(),
+                            widthFactor:
+                                (r.$2 /
+                                        rows
+                                            .map((x) => x.$2)
+                                            .reduce((a, b) => a > b ? a : b))
+                                    .clamp(0.02, 1.0)
+                                    .toDouble(),
                             heightFactor: 1,
                             child: Container(
-                              color:
-                                  i == 2 ? AppColors.pink : AppColors.sky,
+                              color: i == 2 ? AppColors.pink : AppColors.sky,
                             ),
                           ),
                         ),
@@ -506,8 +545,9 @@ class _CostComparisonScreenState extends State<CostComparisonScreen> {
               child: AppField(
                 controller: _home,
                 label: 'Home rate, ₱ per kWh',
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 onChanged: (_) => setState(() {}),
               ),
             ),
@@ -516,8 +556,9 @@ class _CostComparisonScreenState extends State<CostComparisonScreen> {
               child: AppField(
                 controller: _public,
                 label: 'Public rate, ₱ per kWh',
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 onChanged: (_) => setState(() {}),
               ),
             ),
@@ -529,8 +570,9 @@ class _CostComparisonScreenState extends State<CostComparisonScreen> {
               child: AppField(
                 controller: _fuel,
                 label: 'Fuel price, ₱ per liter',
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 onChanged: (_) => setState(() {}),
               ),
             ),
@@ -539,8 +581,9 @@ class _CostComparisonScreenState extends State<CostComparisonScreen> {
               child: AppField(
                 controller: _kmPerLiter,
                 label: 'Fuel economy, km per liter',
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 onChanged: (_) => setState(() {}),
               ),
             ),

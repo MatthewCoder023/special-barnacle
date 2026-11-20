@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_motion.dart';
+
 import 'dart:ui';
 
 import 'basics.dart';
@@ -64,11 +65,16 @@ class _MenuRoute<T> extends PopupRoute<T> {
   Duration get reverseTransitionDuration => const Duration(milliseconds: 144);
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     final screen = MediaQuery.sizeOf(context);
     final openUp = anchor.bottom + 56.0 * items.length + 24 > screen.height;
-    final right = (screen.width - anchor.right).clamp(12.0, screen.width).toDouble();
+    final right = (screen.width - anchor.right)
+        .clamp(12.0, screen.width)
+        .toDouble();
     final curved = CurvedAnimation(
       parent: animation,
       curve: AppMotion.enter,
@@ -82,28 +88,29 @@ class _MenuRoute<T> extends PopupRoute<T> {
       child: Material(
         type: MaterialType.transparency,
         child: Container(
-        constraints: const BoxConstraints(minWidth: 190, maxWidth: 260),
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: IntrinsicWidth(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              for (var i = 0; i < items.length; i++)
-                _MenuRow<T>(
-                  item: items[i],
-                  animation: animation,
-                  start: reduced
-                      ? 0
-                      : (i * AppMotion.stagger.inMilliseconds /
-                              transitionDuration.inMilliseconds)
-                          .clamp(0.0, 0.6)
-                          .toDouble(),
-                ),
-            ],
+          constraints: const BoxConstraints(minWidth: 190, maxWidth: 260),
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: IntrinsicWidth(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var i = 0; i < items.length; i++)
+                  _MenuRow<T>(
+                    item: items[i],
+                    animation: animation,
+                    start: reduced
+                        ? 0
+                        : (i *
+                                  AppMotion.stagger.inMilliseconds /
+                                  transitionDuration.inMilliseconds)
+                              .clamp(0.0, 0.6)
+                              .toDouble(),
+                  ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
 
@@ -113,8 +120,7 @@ class _MenuRoute<T> extends PopupRoute<T> {
           ? menu
           : ScaleTransition(
               scale: Tween(begin: 0.95, end: 1.0).animate(curved),
-              alignment:
-                  openUp ? Alignment.bottomRight : Alignment.topRight,
+              alignment: openUp ? Alignment.bottomRight : Alignment.topRight,
               child: menu,
             ),
     );
@@ -165,7 +171,10 @@ class _MenuRow<T> extends StatelessWidget {
                 child: Text(
                   item.label,
                   style: TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500, color: color),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: color,
+                  ),
                 ),
               ),
             ],
@@ -237,14 +246,15 @@ Future<T?> showAppDialog<T>(
                 Text(title, style: Theme.of(context).textTheme.titleLarge),
                 if (message != null) ...[
                   const SizedBox(height: 8),
-                  Text(message,
-                      style: const TextStyle(
-                          color: AppColors.inkSoft, height: 1.45)),
+                  Text(
+                    message,
+                    style: const TextStyle(
+                      color: AppColors.inkSoft,
+                      height: 1.45,
+                    ),
+                  ),
                 ],
-                if (content != null) ...[
-                  const SizedBox(height: 14),
-                  content,
-                ],
+                if (content != null) ...[const SizedBox(height: 14), content],
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -352,8 +362,10 @@ Future<T?> showAppSheet<T>(
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(title,
-                          style: Theme.of(sheetContext).textTheme.titleLarge),
+                      child: Text(
+                        title,
+                        style: Theme.of(sheetContext).textTheme.titleLarge,
+                      ),
                     ),
                     IconSquare(
                       icon: 'close',
@@ -398,13 +410,16 @@ Future<T?> pickOption<T>(
               onTap: () => Navigator.of(sheetContext).pop(o),
               child: Container(
                 margin: const EdgeInsets.only(bottom: 8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: o == selected ? AppColors.skySoft : AppColors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                      color: o == selected ? AppColors.sky : AppColors.line),
+                    color: o == selected ? AppColors.sky : AppColors.line,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -412,20 +427,24 @@ Future<T?> pickOption<T>(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(label(o),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600)),
+                          Text(
+                            label(o),
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
                           if (subtitle != null)
-                            Text(subtitle(o),
-                                style: Theme.of(sheetContext)
-                                    .textTheme
-                                    .bodySmall),
+                            Text(
+                              subtitle(o),
+                              style: Theme.of(sheetContext).textTheme.bodySmall,
+                            ),
                         ],
                       ),
                     ),
                     if (o == selected)
-                      const AppIcon('check',
-                          size: 18, color: AppColors.skyDeep),
+                      const AppIcon(
+                        'check',
+                        size: 18,
+                        color: AppColors.skyDeep,
+                      ),
                   ],
                 ),
               ),
@@ -449,8 +468,12 @@ void showToast(BuildContext context, String message, {bool success = true}) {
         margin: const EdgeInsets.fromLTRB(20, 0, 20, 96),
         content: Row(
           children: [
-            if (success) const _Pulse(child: AppIcon('check', size: 18, color: AppColors.sky))
-            else const AppIcon('info', size: 18, color: AppColors.sky),
+            if (success)
+              const _Pulse(
+                child: AppIcon('check', size: 18, color: AppColors.sky),
+              )
+            else
+              const AppIcon('info', size: 18, color: AppColors.sky),
             const SizedBox(width: 10),
             Expanded(child: Text(message)),
           ],
@@ -539,7 +562,11 @@ class DetailScaffold extends StatelessWidget {
                     child: ListView(
                       // Leaves room so the last item clears the glass bar.
                       padding: EdgeInsets.fromLTRB(
-                          20, 6, 20, bottom == null ? 40 : 150),
+                        20,
+                        6,
+                        20,
+                        bottom == null ? 40 : 150,
+                      ),
                       children: children,
                     ),
                   ),
@@ -622,9 +649,10 @@ class AppField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: const TextStyle(
-                  fontSize: 13, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          ),
           const SizedBox(height: 6),
           TextField(
             controller: controller,
@@ -649,8 +677,10 @@ class FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, top: 4),
-      child: Text(text,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+      ),
     );
   }
 }
@@ -680,12 +710,15 @@ class ToggleRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 if (subtitle != null)
-                  Text(subtitle!,
-                      style: Theme.of(context).textTheme.bodySmall),
+                  Text(subtitle!, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),

@@ -34,36 +34,46 @@ class _SearchScreenState extends State<SearchScreen> {
     final q = _query.text.trim().toLowerCase();
     bool hit(String s) => s.toLowerCase().contains(q);
 
-    final results = <(String icon, String title, String subtitle, Widget screen)>[
-      if (q.isNotEmpty) ...[
-        for (final c in state.communities.where((c) =>
-            c.status.name == 'approved' && (hit(c.name) || hit(c.description))))
-          (
-            'community',
-            c.name,
-            c.isTribe ? 'Tribe' : 'Community',
-            CommunityDetailScreen(communityId: c.id),
-          ),
-        for (final e in state.upcomingEvents.where((e) => hit(e.title)))
-          ('events', e.title, 'Event', EventDetailScreen(eventId: e.id)),
-        for (final s in state.stations
-            .where((s) => hit(s.name) || hit(s.city) || hit(s.operator)))
-          (
-            'charging',
-            s.name,
-            'Charging station · ${s.city}',
-            StationDetailScreen(stationId: s.id),
-          ),
-        for (final p in state.directory.where((p) =>
-            hit(p.name) || hit(p.city) || p.services.any(hit) || p.brands.any(hit)))
-          (
-            'wrench',
-            p.name,
-            '${p.category.label} · ${p.city}',
-            ProviderDetailScreen(providerId: p.id),
-          ),
-      ],
-    ];
+    final results =
+        <(String icon, String title, String subtitle, Widget screen)>[
+          if (q.isNotEmpty) ...[
+            for (final c in state.communities.where(
+              (c) =>
+                  c.status.name == 'approved' &&
+                  (hit(c.name) || hit(c.description)),
+            ))
+              (
+                'community',
+                c.name,
+                c.isTribe ? 'Tribe' : 'Community',
+                CommunityDetailScreen(communityId: c.id),
+              ),
+            for (final e in state.upcomingEvents.where((e) => hit(e.title)))
+              ('events', e.title, 'Event', EventDetailScreen(eventId: e.id)),
+            for (final s in state.stations.where(
+              (s) => hit(s.name) || hit(s.city) || hit(s.operator),
+            ))
+              (
+                'charging',
+                s.name,
+                'Charging station · ${s.city}',
+                StationDetailScreen(stationId: s.id),
+              ),
+            for (final p in state.directory.where(
+              (p) =>
+                  hit(p.name) ||
+                  hit(p.city) ||
+                  p.services.any(hit) ||
+                  p.brands.any(hit),
+            ))
+              (
+                'wrench',
+                p.name,
+                '${p.category.label} · ${p.city}',
+                ProviderDetailScreen(providerId: p.id),
+              ),
+          ],
+        ];
 
     return DetailScaffold(
       title: 'Search',
@@ -101,8 +111,10 @@ class _SearchScreenState extends State<SearchScreen> {
               padding: const EdgeInsets.only(bottom: 10),
               child: AppCard(
                 onTap: () => pushScreen(context, r.$4),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     AppIcon(r.$1, size: 18, color: AppColors.skyDeep),
@@ -111,16 +123,22 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(r.$2,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600)),
-                          Text(r.$3,
-                              style: Theme.of(context).textTheme.bodySmall),
+                          Text(
+                            r.$2,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            r.$3,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         ],
                       ),
                     ),
-                    const AppIcon('chevron',
-                        size: 16, color: AppColors.inkFaint),
+                    const AppIcon(
+                      'chevron',
+                      size: 16,
+                      color: AppColors.inkFaint,
+                    ),
                   ],
                 ),
               ),
