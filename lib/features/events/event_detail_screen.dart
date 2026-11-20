@@ -24,16 +24,19 @@ class EventDetailScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     final e = state.events.where((x) => x.id == eventId).firstOrNull;
     if (e == null || !state.canSee(e)) {
-      return const DetailScaffold(title: 'Event', children: [
-        EmptyState(icon: 'events', title: 'This event is not available'),
-      ]);
+      return const DetailScaffold(
+        title: 'Event',
+        children: [
+          EmptyState(icon: 'events', title: 'This event is not available'),
+        ],
+      );
     }
     final group = state.communityById(e.communityId);
     final manage = state.canManageEvent(e);
     final mine = state.myRsvp(e);
     final stop = state.stationById(e.stopStationId);
     final route = EventRoute.of(e, stop);
-    final full = e.rsvps.length >= e.capacity;
+    final full = e.attendeeCount >= e.capacity;
     final past = e.start.isBefore(state.now);
     final text = Theme.of(context).textTheme;
 
@@ -78,8 +81,12 @@ class EventDetailScreen extends StatelessWidget {
         if (manage && !e.cancelled && !past)
           MenuButton<String>(
             items: const [
-              AppMenuItem('cancel', 'Cancel event',
-                  icon: 'close', danger: true),
+              AppMenuItem(
+                'cancel',
+                'Cancel event',
+                icon: 'close',
+                danger: true,
+              ),
             ],
             onSelected: (_) async {
               final ok = await confirmAction(
@@ -92,8 +99,11 @@ class EventDetailScreen extends StatelessWidget {
               );
               if (ok && context.mounted) {
                 state.cancelEvent(e);
-                showToast(context, 'Event cancelled. Attendees were notified.',
-                    success: false);
+                showToast(
+                  context,
+                  'Event cancelled. Attendees were notified.',
+                  success: false,
+                );
               }
             },
           ),
@@ -122,9 +132,11 @@ class EventDetailScreen extends StatelessWidget {
             children: [
               InfoRow('events', fmtDateTime(e.start), color: AppColors.ink),
               InfoRow('pin', e.venue.name, color: AppColors.ink),
-              InfoRow('community',
-                  '${e.rsvps.length} of ${e.capacity} places taken',
-                  color: AppColors.ink),
+              InfoRow(
+                'community',
+                '${e.attendeeCount} of ${e.capacity} places taken',
+                color: AppColors.ink,
+              ),
             ],
           ),
         ),
@@ -162,14 +174,16 @@ class EventDetailScreen extends StatelessWidget {
                   pins: [
                     if (stop != null)
                       MapPin(
-                          lat: stop.lat,
-                          lng: stop.lng,
-                          label: stop.name,
-                          tone: Tone.pink),
+                        lat: stop.lat,
+                        lng: stop.lng,
+                        label: stop.name,
+                        tone: Tone.pink,
+                      ),
                     MapPin(
-                        lat: e.venue.lat,
-                        lng: e.venue.lng,
-                        label: e.venue.name),
+                      lat: e.venue.lat,
+                      lng: e.venue.lng,
+                      label: e.venue.name,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -180,8 +194,10 @@ class EventDetailScreen extends StatelessWidget {
                       : 'About ${km(route.kmToStop)} to the stop, then ${km(route.kmFromStop)} to the destination',
                 ),
                 if (stop != null)
-                  InfoRow('charging',
-                      'Charging stop: ${stop.name} (${stop.connectors.map((c) => '${c.type.label} ${c.powerKw.round()} kW').join(', ')})'),
+                  InfoRow(
+                    'charging',
+                    'Charging stop: ${stop.name} (${stop.connectors.map((c) => '${c.type.label} ${c.powerKw.round()} kW').join(', ')})',
+                  ),
                 Text(
                   'Distances are estimates. Results guide planning and are not a guarantee.',
                   style: text.bodySmall,
@@ -209,8 +225,7 @@ class EventDetailScreen extends StatelessWidget {
           ],
         ],
         if (manage) ...[
-          SectionHeader(
-              'Attendees · ${plural(e.rsvps.length, 'RSVP')}'),
+          SectionHeader('Attendees · ${plural(e.rsvps.length, 'RSVP')}'),
           if (e.rsvps.isEmpty)
             const EmptyState(icon: 'community', title: 'No RSVPs yet'),
           if (route != null && e.rsvps.isNotEmpty)
@@ -244,13 +259,25 @@ class EventDetailScreen extends StatelessWidget {
   Future<void> _chooseStop(BuildContext context, CommunityEvent e) async {
     final state = context.read<AppState>();
     final origin = e.origin!;
-    final near = state.stations.where((s) {
-      final off = Geo.distanceToSegmentKm(
-          s.lat, s.lng, origin.lat, origin.lng, e.venue.lat, e.venue.lng);
-      return off <= 12;
-    }).toList()
-      ..sort((a, b) => Geo.haversineKm(origin.lat, origin.lng, a.lat, a.lng)
-          .compareTo(Geo.haversineKm(origin.lat, origin.lng, b.lat, b.lng)));
+    final near =
+        state.stations.where((s) {
+          final off = Geo.distanceToSegmentKm(
+            s.lat,
+            s.lng,
+            origin.lat,
+            origin.lng,
+            e.venue.lat,
+            e.venue.lng,
+          );
+          return off <= 12;
+        }).toList()..sort(
+          (a, b) => Geo.haversineKm(
+            origin.lat,
+            origin.lng,
+            a.lat,
+            a.lng,
+          ).compareTo(Geo.haversineKm(origin.lat, origin.lng, b.lat, b.lng)),
+        );
     final none = Station(
       id: '',
       name: 'No charging stop',
@@ -292,8 +319,7 @@ class _RouteSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final checks = [for (final r in event.rsvps) EventRules.check(r, route)];
-    final flagged =
-        checks.where((c) => c.result == Feasibility.flagged).length;
+    final flagged = checks.where((c) => c.result == Feasibility.flagged).length;
     final engine = checks.where((c) => c.result == Feasibility.engine).length;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -336,7 +362,12 @@ class _CheckRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (showName) ...[
-              Avatar(user?.initials ?? '?', imageUrl: user?.avatarUrl, imageBytes: user?.avatarBytes, size: 38),
+              Avatar(
+                user?.initials ?? '?',
+                imageUrl: user?.avatarUrl,
+                imageBytes: user?.avatarBytes,
+                size: 38,
+              ),
               const SizedBox(width: 12),
             ],
             Expanded(
@@ -344,8 +375,10 @@ class _CheckRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (showName)
-                    Text(user?.name ?? 'Member',
-                        style: const TextStyle(fontWeight: FontWeight.w600)),
+                    Text(
+                      user?.name ?? 'Member',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
                   Text(
                     r.vehicle == null
                         ? 'No vehicle'
@@ -353,9 +386,11 @@ class _CheckRow extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 8),
-                  Tag(check.result.label,
-                      tone: tone,
-                      icon: check.result == Feasibility.ok ? 'check' : 'alert'),
+                  Tag(
+                    check.result.label,
+                    tone: tone,
+                    icon: check.result == Feasibility.ok ? 'check' : 'alert',
+                  ),
                   const SizedBox(height: 6),
                   Text(check.reason, style: const TextStyle(fontSize: 13)),
                 ],
@@ -380,14 +415,21 @@ class _AttendeeRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          Avatar(user?.initials ?? '?', imageUrl: user?.avatarUrl, imageBytes: user?.avatarBytes, size: 38),
+          Avatar(
+            user?.initials ?? '?',
+            imageUrl: user?.avatarUrl,
+            imageBytes: user?.avatarBytes,
+            size: 38,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user?.name ?? 'Member',
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(
+                  user?.name ?? 'Member',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
                 Text(
                   rsvp.vehicle == null
                       ? 'No vehicle'
@@ -449,12 +491,15 @@ class _RsvpFormState extends State<_RsvpForm> {
           ),
         ),
         const SizedBox(height: 6),
-        Text('Taken from your profile.',
-            style: Theme.of(context).textTheme.bodySmall),
+        Text(
+          'Taken from your profile.',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
         if (v != null) ...[
           const SizedBox(height: 16),
           FieldLabel(
-              'Starting battery level: ${_battery.round()}%${route ? ' · about ${ChargingRules.remainingRangeKm(v, _battery).round()} km' : ''}'),
+            'Starting battery level: ${_battery.round()}%${route ? ' · about ${ChargingRules.remainingRangeKm(v, _battery).round()} km' : ''}',
+          ),
           Slider(
             value: _battery,
             min: 5,

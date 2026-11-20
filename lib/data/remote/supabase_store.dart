@@ -107,7 +107,9 @@ class SupabaseStore implements RemoteStore {
   Future<String> uploadAvatar(Uint8List bytes, String contentType) =>
       _guard(() async {
         final path = '${userId!}/avatar';
-        await _client.storage.from(_avatars).uploadBinary(
+        await _client.storage
+            .from(_avatars)
+            .uploadBinary(
               path,
               bytes,
               fileOptions: FileOptions(contentType: contentType, upsert: true),
@@ -120,23 +122,24 @@ class SupabaseStore implements RemoteStore {
 
   @override
   Future<void> removeAvatar() => _guard(
-        () => _client.storage.from(_avatars).remove(['${userId!}/avatar']),
-      );
+    () => _client.storage.from(_avatars).remove(['${userId!}/avatar']),
+  );
 
   @override
   Future<void> changePassword(String current, String next) => _guard(() async {
-        final email = _client.auth.currentUser?.email;
-        if (email == null) {
-          throw const AuthException(
-              'This account signs in with Google or Apple and has no password here.');
-        }
-        try {
-          await _client.auth.signInWithPassword(email: email, password: current);
-        } on AuthException {
-          throw const AuthException('Your current password is not correct.');
-        }
-        await _client.auth.updateUser(UserAttributes(password: next));
-      });
+    final email = _client.auth.currentUser?.email;
+    if (email == null) {
+      throw const AuthException(
+        'This account signs in with Google or Apple and has no password here.',
+      );
+    }
+    try {
+      await _client.auth.signInWithPassword(email: email, password: current);
+    } on AuthException {
+      throw const AuthException('Your current password is not correct.');
+    }
+    await _client.auth.updateUser(UserAttributes(password: next));
+  });
 
   @override
   Stream<void> get signedIn => _client.auth.onAuthStateChange
@@ -148,8 +151,21 @@ class SupabaseStore implements RemoteStore {
     final results = await Future.wait([
       for (final table in remoteTables) _client.from(table).select(),
     ]);
+    final counts = await Future.wait([
+      for (final fn in remoteFunctions)
+        _client
+            .rpc(fn)
+            .then(
+              (rows) => [
+                for (final r in rows as List)
+                  Map<String, dynamic>.from(r as Map),
+              ],
+            ),
+    ]);
     return buildSnapshot({
       for (var i = 0; i < remoteTables.length; i++) remoteTables[i]: results[i],
+      for (var i = 0; i < remoteFunctions.length; i++)
+        remoteFunctions[i]: counts[i],
     });
   });
 

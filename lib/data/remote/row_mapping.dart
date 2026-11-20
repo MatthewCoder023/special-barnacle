@@ -32,6 +32,11 @@ const remoteTables = [
   'news_articles',
 ];
 
+/// Backend functions loaded with the tables. Membership lists, votes and
+/// RSVPs are private, so these return counts and anonymous ballots for what
+/// the user cannot read directly.
+const remoteFunctions = ['member_counts', 'poll_ballots', 'event_attendance'];
+
 typedef Row = Map<String, dynamic>;
 
 DateTime _time(dynamic v) => DateTime.parse(v as String).toLocal();
@@ -40,6 +45,11 @@ double _num(dynamic v) => (v as num).toDouble();
 List<String> _strings(dynamic v) => [
   for (final x in (v as List? ?? const [])) x as String,
 ];
+
+/// How many of [total] records the user cannot see, given [visible] of
+/// them. Without a total (sample data, older backends) nothing is hidden.
+int _hidden(int? total, int visible) =>
+    total == null || total <= visible ? 0 : total - visible;
 
 /// Groups [rows] by the string value of [key].
 Map<String, List<Row>> _groupBy(List<Row> rows, String key) {
@@ -52,7 +62,8 @@ Map<String, List<Row>> _groupBy(List<Row> rows, String key) {
 
 /// Builds the app's models from database rows.
 ///
-/// [tables] maps each name in [remoteTables] to its rows. Child rows
+/// [tables] maps each name in [remoteTables] and [remoteFunctions] to its
+/// rows. Child rows
 /// (members, replies, votes, RSVPs, reports and so on) are folded into their
 /// parent models, matching how the screens read them.
 RemoteSnapshot buildSnapshot(Map<String, List<Row>> tables) {
@@ -98,6 +109,10 @@ RemoteSnapshot buildSnapshot(Map<String, List<Row>> tables) {
   ];
 
   final membersOf = _groupBy(rows('community_members'), 'community_id');
+  final memberTotals = {
+    for (final r in rows('member_counts'))
+      r['community_id'] as String: (r['members'] as num).toInt(),
+  };
   final requestsOf = _groupBy(rows('join_requests'), 'community_id');
   final communities = [
     for (final r in rows('communities'))
@@ -127,6 +142,7 @@ RemoteSnapshot buildSnapshot(Map<String, List<Row>> tables) {
             for (final q in requestsOf[r['id']] ?? const <Row>[])
               q['user_id'] as String,
           ],
+          hiddenMembers: _hidden(memberTotals[r['id']], members.length),
         );
         for (final m in members) {
           c.joinedAt[m['user_id'] as String] = _time(m['joined_at']);
@@ -200,6 +216,7 @@ RemoteSnapshot buildSnapshot(Map<String, List<Row>> tables) {
   ];
 
   final votesOf = _groupBy(rows('votes'), 'proposal_id');
+  final ballotsOf = _groupBy(rows('poll_ballots'), 'proposal_id');
   final proposals = [
     for (final r in rows('proposals'))
       Proposal(
@@ -221,6 +238,10 @@ RemoteSnapshot buildSnapshot(Map<String, List<Row>> tables) {
               for (final i in v['choice'] as List) (i as num).toInt(),
             ],
         },
+        hiddenBallots: [
+          for (final b in ballotsOf[r['id']] ?? const <Row>[])
+            [for (final i in b['choice'] as List) (i as num).toInt()],
+        ],
       ),
   ];
 
@@ -276,6 +297,10 @@ RemoteSnapshot buildSnapshot(Map<String, List<Row>> tables) {
   ];
 
   final rsvpsOf = _groupBy(rows('rsvps'), 'event_id');
+  final attendeeTotals = {
+    for (final r in rows('event_attendance'))
+      r['event_id'] as String: (r['attendees'] as num).toInt(),
+  };
   final events = [
     for (final r in rows('events'))
       CommunityEvent(
@@ -310,6 +335,10 @@ RemoteSnapshot buildSnapshot(Map<String, List<Row>> tables) {
               startBatteryPct: _num(v['start_battery_pct']),
             ),
         ],
+        hiddenAttendees: _hidden(
+          attendeeTotals[r['id']],
+          (rsvpsOf[r['id']] ?? const <Row>[]).length,
+        ),
       ),
   ];
 

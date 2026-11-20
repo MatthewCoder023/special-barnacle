@@ -537,7 +537,8 @@ class AppState extends ChangeNotifier {
     final store = remote;
     if (store == null) {
       throw RemoteException(
-          'Sample accounts have no password. Sign in with a real account to change it.');
+        'Sample accounts have no password. Sign in with a real account to change it.',
+      );
     }
     await store.changePassword(current, next);
   }
@@ -595,28 +596,32 @@ class AppState extends ChangeNotifier {
       discussions.where((d) => d.authorId == me.id).toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   int get myReplyCount => discussions.fold(
-      0, (n, d) => n + d.replies.where((r) => r.authorId == me.id).length);
-  List<Review> get myReviews => reviews.where((r) => r.authorId == me.id).toList()
-    ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    0,
+    (n, d) => n + d.replies.where((r) => r.authorId == me.id).length,
+  );
+  List<Review> get myReviews =>
+      reviews.where((r) => r.authorId == me.id).toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   List<Concern> get myConcerns =>
       concerns.where((k) => k.authorId == me.id).toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  List<CommunityEvent> get myEvents => events
-      .where((e) => !e.cancelled && e.rsvps.any((r) => r.userId == me.id))
-      .toList()
-    ..sort((a, b) => b.start.compareTo(a.start));
+  List<CommunityEvent> get myEvents =>
+      events
+          .where((e) => !e.cancelled && e.rsvps.any((r) => r.userId == me.id))
+          .toList()
+        ..sort((a, b) => b.start.compareTo(a.start));
 
   /// Steps left to complete the profile, in the order they are suggested.
   List<String> get profileSteps => [
-        if (me.region.trim().isEmpty) 'Add your city',
-        if ((me.role == PlatformRole.member || me.role == PlatformRole.guest) &&
-            me.vehicle == null)
-          'Add your vehicle',
-        if (me.role == PlatformRole.member &&
-            me.vehicle != null &&
-            me.verification == VerificationStatus.none)
-          'Verify ownership',
-      ];
+    if (me.region.trim().isEmpty) 'Add your city',
+    if ((me.role == PlatformRole.member || me.role == PlatformRole.guest) &&
+        me.vehicle == null)
+      'Add your vehicle',
+    if (me.role == PlatformRole.member &&
+        me.vehicle != null &&
+        me.verification == VerificationStatus.none)
+      'Verify ownership',
+  ];
 
   void submitVerification() {
     me.verification = VerificationStatus.pending;
@@ -768,8 +773,12 @@ class AppState extends ChangeNotifier {
     if (target == ReviewTarget.provider) {
       final p = providerById(targetId);
       if (p != null) {
-        _notify(p.ownerId, 'New review', '${me.name} reviewed ${p.name}.',
-            kind: NotifyKind.account);
+        _notify(
+          p.ownerId,
+          'New review',
+          '${me.name} reviewed ${p.name}.',
+          kind: NotifyKind.account,
+        );
       }
     }
     notifyListeners();
@@ -1092,8 +1101,12 @@ class AppState extends ChangeNotifier {
     } else {
       for (final id in community.members.keys) {
         if (id != me.id) {
-          _notify(id, 'New event', '${community.name}: $title',
-              kind: NotifyKind.events);
+          _notify(
+            id,
+            'New event',
+            '${community.name}: $title',
+            kind: NotifyKind.events,
+          );
         }
       }
     }
@@ -1121,7 +1134,7 @@ class AppState extends ChangeNotifier {
     if (existing != null) {
       existing.startBatteryPct = startBatteryPct;
     } else {
-      if (e.rsvps.length >= e.capacity) return false;
+      if (e.attendeeCount >= e.capacity) return false;
       e.rsvps.add(
         Rsvp(
           userId: me.id,

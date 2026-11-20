@@ -79,10 +79,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _save() {
     final error = context.read<AppState>().updateProfile(
-          name: _name.text.trim(),
-          username: _username.text,
-          region: _region.text.trim(),
-        );
+      name: _name.text.trim(),
+      username: _username.text,
+      region: _region.text.trim(),
+    );
     if (error != null) {
       setState(() => _error = error);
       return;
@@ -218,8 +218,10 @@ class VehicleScreen extends StatelessWidget {
                       key: ValueKey(v?.name),
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(v?.name ?? 'Add your vehicle',
-                            style: text.titleMedium),
+                        Text(
+                          v?.name ?? 'Add your vehicle',
+                          style: text.titleMedium,
+                        ),
                         Text(
                           v == null
                               ? 'Needed for range, compatible chargers and event route checks'
@@ -246,13 +248,19 @@ class VehicleScreen extends StatelessWidget {
                   VehicleType.reev => 'Range-extended (REEV)',
                 }),
                 _Spec('Battery capacity', '${v.batteryKwh} kWh'),
-                _Spec('Rated energy use',
-                    '${(v.kwhPerKm * 100).toStringAsFixed(1)} kWh per 100 km'),
-                _Spec('Rated range',
-                    '${v.fullRangeKm.round()} km${v.hasEngine ? ' electric' : ''}'),
-                _Spec('Connectors',
-                    v.connectors.map((c) => c.label).join(', '),
-                    last: true),
+                _Spec(
+                  'Rated energy use',
+                  '${(v.kwhPerKm * 100).toStringAsFixed(1)} kWh per 100 km',
+                ),
+                _Spec(
+                  'Rated range',
+                  '${v.fullRangeKm.round()} km${v.hasEngine ? ' electric' : ''}',
+                ),
+                _Spec(
+                  'Connectors',
+                  v.connectors.map((c) => c.label).join(', '),
+                  last: true,
+                ),
               ],
             ),
           ),
@@ -280,7 +288,8 @@ class VehicleScreen extends StatelessWidget {
                       state.setChargingPrefs(chargeToPct: x.round()),
                 ),
                 FieldLabel(
-                    'Safety reserve: ${me.reservePct}% · about ${ChargingRules.remainingRangeKm(v, me.reservePct.toDouble()).round()} km'),
+                  'Safety reserve: ${me.reservePct}% · about ${ChargingRules.remainingRangeKm(v, me.reservePct.toDouble()).round()} km',
+                ),
                 Slider(
                   value: me.reservePct.toDouble(),
                   min: 0,
@@ -321,15 +330,14 @@ class VehicleScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(
                   switch (me.verification) {
-                    VerificationStatus.verified =>
-                      'Your posts and reviews show the verified-owner label, and you can join groups that require it.',
-                    VerificationStatus.pending =>
-                      'The platform administrator is reviewing your proof. The document is deleted after the decision.',
-                    _ =>
-                      'Some communities and tribes admit verified owners only. Submit minimal proof of ownership, such as the name and plate lines of your registration.',
+                    VerificationStatus.verified => 'Your posts and reviews show the verified-owner label, and you can join groups that require it.',
+                    VerificationStatus.pending => 'The platform administrator is reviewing your proof. The document is deleted after the decision.',
+                    _ => 'Some communities and tribes admit verified owners only. Submit minimal proof of ownership, such as the name and plate lines of your registration.',
                   },
                   style: const TextStyle(
-                      fontSize: 13.5, color: AppColors.inkSoft),
+                    fontSize: 13.5,
+                    color: AppColors.inkSoft,
+                  ),
                 ),
                 if (me.verification == VerificationStatus.none ||
                     me.verification == VerificationStatus.rejected) ...[
@@ -375,14 +383,20 @@ class _Spec extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style: const TextStyle(
-                      fontSize: 13.5, color: AppColors.inkSoft)),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13.5,
+                  color: AppColors.inkSoft,
+                ),
+              ),
               const SizedBox(width: 16),
               Expanded(
-                child: Text(value,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                child: Text(
+                  value,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
             ],
           ),
@@ -450,22 +464,32 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                           padding: const EdgeInsets.only(bottom: 8),
                           child: AppCard(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 12),
-                            onTap: () => pushScreen(context,
-                                CommunityDetailScreen(communityId: c.id)),
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            onTap: () => pushScreen(
+                              context,
+                              CommunityDetailScreen(communityId: c.id),
+                            ),
                             child: Row(
                               children: [
-                                AppIcon(c.isTribe ? 'flag' : 'community',
-                                    size: 18, color: AppColors.skyDeep),
+                                AppIcon(
+                                  c.isTribe ? 'flag' : 'community',
+                                  size: 18,
+                                  color: AppColors.skyDeep,
+                                ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(c.name,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600)),
+                                      Text(
+                                        c.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                       Text(
                                         c.status == ApprovalStatus.pending
                                             ? 'Waiting for admin approval'
@@ -475,10 +499,12 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                                     ],
                                   ),
                                 ),
-                                Tag(state.roleIn(c)?.label ?? 'Member',
-                                    tone: state.canManage(c)
-                                        ? Tone.pink
-                                        : Tone.neutral),
+                                Tag(
+                                  state.roleIn(c)?.label ?? 'Member',
+                                  tone: state.canManage(c)
+                                      ? Tone.pink
+                                      : Tone.neutral,
+                                ),
                               ],
                             ),
                           ),
@@ -494,24 +520,27 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                       children: [
                         Expanded(
                           child: StatTile(
-                              icon: 'chat',
-                              value: '${posts.length + state.myReplyCount}',
-                              label: 'Posts and replies'),
+                            icon: 'chat',
+                            value: '${posts.length + state.myReplyCount}',
+                            label: 'Posts and replies',
+                          ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: StatTile(
-                              icon: 'star',
-                              value: '${reviews.length}',
-                              label: 'Reviews',
-                              pink: true),
+                            icon: 'star',
+                            value: '${reviews.length}',
+                            label: 'Reviews',
+                            pink: true,
+                          ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: StatTile(
-                              icon: 'megaphone',
-                              value: '${concerns.length}',
-                              label: 'Concerns'),
+                            icon: 'megaphone',
+                            value: '${concerns.length}',
+                            label: 'Concerns',
+                          ),
                         ),
                       ],
                     ),
@@ -522,8 +551,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                       const EmptyState(
                         icon: 'chat',
                         title: 'Nothing yet',
-                        message:
-                            'Your posts, reviews, concerns and RSVPs appear here.',
+                        message: 'Your posts, reviews, concerns and RSVPs appear here.',
                       ),
                     if (posts.isNotEmpty) const SectionHeader('Your posts'),
                     for (final d in posts.take(6))
@@ -532,8 +560,10 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                         title: d.title,
                         detail:
                             '${state.communityById(d.communityId)?.name ?? ''} · ${timeAgo(d.createdAt)}',
-                        onTap: () => pushScreen(context,
-                            DiscussionDetailScreen(discussionId: d.id)),
+                        onTap: () => pushScreen(
+                          context,
+                          DiscussionDetailScreen(discussionId: d.id),
+                        ),
                       ),
                     if (events.isNotEmpty) const SectionHeader('Your RSVPs'),
                     for (final e in events.take(6))
@@ -542,7 +572,9 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                         title: e.title,
                         detail: fmtDateTime(e.start),
                         onTap: () => pushScreen(
-                            context, EventDetailScreen(eventId: e.id)),
+                          context,
+                          EventDetailScreen(eventId: e.id),
+                        ),
                       ),
                     if (reviews.isNotEmpty) const SectionHeader('Your reviews'),
                     for (final r in reviews.take(6))
@@ -551,9 +583,8 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                         title: r.target == ReviewTarget.station
                             ? state.stationById(r.targetId)?.name ?? 'Station'
                             : state.providerById(r.targetId)?.name ??
-                                'Provider',
-                        detail:
-                            '${r.rating} of 5 · ${timeAgo(r.createdAt)}',
+                                  'Provider',
+                        detail: '${r.rating} of 5 · ${timeAgo(r.createdAt)}',
                       ),
                     if (concerns.isNotEmpty)
                       const SectionHeader('Your concerns'),
@@ -566,7 +597,9 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                         onTap: () => pushScreen(
                           context,
                           CommunityDetailScreen(
-                              communityId: k.communityId, initialTab: 'Voice'),
+                            communityId: k.communityId,
+                            initialTab: 'Voice',
+                          ),
                         ),
                       ),
                   ],
@@ -602,10 +635,12 @@ class _ActivityRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
                 Text(detail, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
@@ -736,7 +771,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     if (_next.text == _current.text) {
       return 'Choose a password different from the current one.';
     }
-    if (_confirm.text != _next.text) return 'The two new passwords do not match.';
+    if (_confirm.text != _next.text) {
+      return 'The two new passwords do not match.';
+    }
     return null;
   }
 
@@ -760,19 +797,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _field(TextEditingController controller, String label) => Padding(
-        padding: const EdgeInsets.only(bottom: 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FieldLabel(label),
-            TextField(
-              controller: controller,
-              obscureText: true,
-              onChanged: (_) => setState(() {}),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 14),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FieldLabel(label),
+        TextField(
+          controller: controller,
+          obscureText: true,
+          onChanged: (_) => setState(() {}),
         ),
-      );
+      ],
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -788,8 +825,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 if (missing != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(missing,
-                        style: Theme.of(context).textTheme.bodySmall),
+                    child: Text(
+                      missing,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
                 AppButton(
                   label: _busy ? 'Please wait' : 'Change password',

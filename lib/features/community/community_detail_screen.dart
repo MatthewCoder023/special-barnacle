@@ -44,15 +44,22 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
     final state = context.watch<AppState>();
     final c = state.communityById(widget.communityId);
     if (c == null) {
-      return const DetailScaffold(title: 'Community', children: [
-        EmptyState(icon: 'community', title: 'This community is not available'),
-      ]);
+      return const DetailScaffold(
+        title: 'Community',
+        children: [
+          EmptyState(
+            icon: 'community',
+            title: 'This community is not available',
+          ),
+        ],
+      );
     }
     final member = state.isMemberOf(c);
     final manage = state.canManage(c);
     final approved = c.status == ApprovalStatus.approved;
     // Approval-based groups show their content to members only.
-    final canView = approved &&
+    final canView =
+        approved &&
         (member || state.isAdmin || c.joinPolicy == JoinPolicy.open);
     final tabs = canView
         ? [
@@ -76,14 +83,24 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
               if (manage && !c.isTribe)
                 const AppMenuItem('tribe', 'Create a tribe', icon: 'flag'),
               if (manage)
-                const AppMenuItem('insights', 'Community insights',
-                    icon: 'chart'),
+                const AppMenuItem(
+                  'insights',
+                  'Community insights',
+                  icon: 'chart',
+                ),
               if (manage)
-                const AppMenuItem('settings', 'Membership and voting rules',
-                    icon: 'sliders'),
+                const AppMenuItem(
+                  'settings',
+                  'Membership and voting rules',
+                  icon: 'sliders',
+                ),
               if (member && !state.isLeaderOf(c))
-                AppMenuItem('leave', 'Leave ${c.kind}',
-                    icon: 'logout', danger: true),
+                AppMenuItem(
+                  'leave',
+                  'Leave ${c.kind}',
+                  icon: 'logout',
+                  danger: true,
+                ),
             ],
             onSelected: (v) => _onMenu(v, c),
           ),
@@ -171,16 +188,20 @@ class _Header extends StatelessWidget {
         children: [
           const AppIcon('check', size: 16),
           const SizedBox(width: 8),
-          Text('You are ${role == GroupRole.member ? 'a member' : 'the ${role.label.toLowerCase()}'}',
-              style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(
+            'You are ${role == GroupRole.member ? 'a member' : 'the ${role.label.toLowerCase()}'}',
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
         ],
       );
     } else if (state.hasRequested(c)) {
       action = Row(
         children: [
           const Expanded(
-            child: Text('Request sent. Waiting for an officer.',
-                style: TextStyle(fontWeight: FontWeight.w600)),
+            child: Text(
+              'Request sent. Waiting for an officer.',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
           AppButton(
             label: 'Cancel',
@@ -211,8 +232,10 @@ class _Header extends StatelessWidget {
         expand: true,
         onTap: () {
           final joined = state.join(c);
-          showToast(context,
-              joined ? 'You joined ${c.name}.' : 'Request sent to the officers.');
+          showToast(
+            context,
+            joined ? 'You joined ${c.name}.' : 'Request sent to the officers.',
+          );
         },
       );
     }
@@ -227,15 +250,17 @@ class _Header extends StatelessWidget {
           if (parent != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
-              child: Text('Tribe of ${parent.name}',
-                  style: const TextStyle(fontSize: 12.5)),
+              child: Text(
+                'Tribe of ${parent.name}',
+                style: const TextStyle(fontSize: 12.5),
+              ),
             ),
           Text(c.name, style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 8),
           Text(
             [
               c.type.label,
-              plural(c.members.length, 'member'),
+              plural(c.memberCount, 'member'),
               c.joinPolicy.label,
             ].join(' · '),
             style: const TextStyle(fontSize: 13),
@@ -349,7 +374,11 @@ class _FeedTabState extends State<_FeedTab> {
                     Row(
                       children: [
                         if (a.pinned) ...[
-                          const Tag('Pinned', tone: Tone.pink, icon: 'bookmark'),
+                          const Tag(
+                            'Pinned',
+                            tone: Tone.pink,
+                            icon: 'bookmark',
+                          ),
                           const SizedBox(width: 8),
                         ],
                         Expanded(
@@ -364,21 +393,27 @@ class _FeedTabState extends State<_FeedTab> {
                             label: a.pinned ? 'Unpin' : 'Pin',
                             child: Padding(
                               padding: const EdgeInsets.all(4),
-                              child: AppIcon('bookmark',
-                                  size: 17,
-                                  color: a.pinned
-                                      ? AppColors.pinkDeep
-                                      : AppColors.inkFaint),
+                              child: AppIcon(
+                                'bookmark',
+                                size: 17,
+                                color: a.pinned
+                                    ? AppColors.pinkDeep
+                                    : AppColors.inkFaint,
+                              ),
                             ),
                           ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(a.title,
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      a.title,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 4),
-                    Text(a.body,
-                        style: const TextStyle(color: AppColors.inkSoft)),
+                    Text(
+                      a.body,
+                      style: const TextStyle(color: AppColors.inkSoft),
+                    ),
                   ],
                 ),
               ),
@@ -431,8 +466,10 @@ class _ReportsReview extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(r.contentTitle,
-                      style: const TextStyle(fontWeight: FontWeight.w600)),
+                  Text(
+                    r.contentTitle,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     'Reason: ${r.reason} · reported by ${state.userName(r.reporterId)}',
@@ -495,19 +532,21 @@ class _TribesTab extends StatelessWidget {
               label: 'Create a tribe',
               icon: 'add',
               expand: true,
-              onTap: () => pushScreen(
-                  context, CreateCommunityScreen(parent: community)),
+              onTap: () =>
+                  pushScreen(context, CreateCommunityScreen(parent: community)),
             ),
           ),
         if (tribes.isEmpty)
           const EmptyState(
             icon: 'flag',
             title: 'No tribes yet',
-            message:
-                'Tribes are smaller groups by model, region or interest inside a community.',
+            message: 'Tribes are smaller groups by model, region or interest inside a community.',
           ),
         for (final (i, t) in tribes.indexed)
-          FadeIn(index: i, child: CommunityCard(community: t)),
+          FadeIn(
+            index: i,
+            child: CommunityCard(community: t),
+          ),
       ],
     );
   }
@@ -540,11 +579,13 @@ class _PollsTab extends StatelessWidget {
           const EmptyState(
             icon: 'vote',
             title: 'No proposals yet',
-            message:
-                'Proposals and polls let the group decide openly, with a deadline and a quorum.',
+            message: 'Proposals and polls let the group decide openly, with a deadline and a quorum.',
           ),
         for (final (i, p) in list.indexed)
-          FadeIn(index: i, child: _ProposalCard(proposal: p)),
+          FadeIn(
+            index: i,
+            child: _ProposalCard(proposal: p),
+          ),
       ],
     );
   }
@@ -565,7 +606,8 @@ class _ProposalCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: AppCard(
-        onTap: () => pushScreen(context, ProposalDetailScreen(proposalId: p.id)),
+        onTap: () =>
+            pushScreen(context, ProposalDetailScreen(proposalId: p.id)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -573,10 +615,13 @@ class _ProposalCard extends StatelessWidget {
               spacing: 6,
               runSpacing: 6,
               children: [
-                Tag(open ? 'Open · closes ${timeLeft(p.deadline)}' : 'Closed',
-                    tone: open ? Tone.success : Tone.neutral),
+                Tag(
+                  open ? 'Open · closes ${timeLeft(p.deadline)}' : 'Closed',
+                  tone: open ? Tone.success : Tone.neutral,
+                ),
                 Tag(p.ranked ? 'Ranked choice' : 'Single choice'),
-                if (voted) const Tag('You voted', tone: Tone.pink, icon: 'check'),
+                if (voted)
+                  const Tag('You voted', tone: Tone.pink, icon: 'check'),
               ],
             ),
             const SizedBox(height: 10),
@@ -598,8 +643,10 @@ class _ProposalCard extends StatelessWidget {
             ),
             if (p.outcome != null) ...[
               const SizedBox(height: 8),
-              Text('Outcome: ${p.outcome}',
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(
+                'Outcome: ${p.outcome}',
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
             ],
           ],
         ),
@@ -648,7 +695,9 @@ class _VoiceTab extends StatelessWidget {
                   icon: 'document',
                   kind: AppButtonKind.sky,
                   onTap: () => pushScreen(
-                      context, CompileSummaryScreen(communityId: c.id)),
+                    context,
+                    CompileSummaryScreen(communityId: c.id),
+                  ),
                 ),
               ),
             ],
@@ -662,20 +711,23 @@ class _VoiceTab extends StatelessWidget {
               child: AppCard(
                 color: AppColors.pinkSoft,
                 border: false,
-                onTap: () =>
-                    pushScreen(context, SummaryScreen(summary: s)),
+                onTap: () => pushScreen(context, SummaryScreen(summary: s)),
                 child: Row(
                   children: [
-                    const AppIcon('document',
-                        size: 20, color: AppColors.pinkDeep),
+                    const AppIcon(
+                      'document',
+                      size: 20,
+                      color: AppColors.pinkDeep,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(s.title,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600)),
+                          Text(
+                            s.title,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
                           Text(
                             '${fmtDate(s.createdAt)} · ${plural(s.concernCount, 'concern')} · ${plural(s.supportCount, 'supporter')}',
                             style: Theme.of(context).textTheme.bodySmall,
@@ -683,8 +735,11 @@ class _VoiceTab extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const AppIcon('chevron',
-                        size: 16, color: AppColors.pinkDeep),
+                    const AppIcon(
+                      'chevron',
+                      size: 16,
+                      color: AppColors.pinkDeep,
+                    ),
                   ],
                 ),
               ),
@@ -695,8 +750,7 @@ class _VoiceTab extends StatelessWidget {
           const EmptyState(
             icon: 'megaphone',
             title: 'No concerns filed',
-            message:
-                'Members can file a concern with a category, location and photo.',
+            message: 'Members can file a concern with a category, location and photo.',
           ),
         for (final (i, k) in concerns.indexed)
           FadeIn(
@@ -729,8 +783,8 @@ class _EventsTab extends StatelessWidget {
               label: 'Create an event',
               icon: 'add',
               expand: true,
-              onTap: () => pushScreen(
-                  context, CreateEventScreen(community: community)),
+              onTap: () =>
+                  pushScreen(context, CreateEventScreen(community: community)),
             ),
           ),
         if (list.isEmpty)
@@ -740,7 +794,10 @@ class _EventsTab extends StatelessWidget {
             message: 'Meetups, convoys, drives and outreach appear here.',
           ),
         for (final (i, e) in list.indexed)
-          FadeIn(index: i, child: EventCard(event: e)),
+          FadeIn(
+            index: i,
+            child: EventCard(event: e),
+          ),
       ],
     );
   }
@@ -775,92 +832,119 @@ class _MembersTab extends StatelessWidget {
             ),
           const SizedBox(height: 10),
         ],
-        Text(plural(members.length, 'member'),
-            style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          plural(members.length, 'member'),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 10),
         for (final (i, entry) in members.indexed)
           FadeIn(
             key: ValueKey(entry.key),
             index: i,
-            child: Builder(builder: (context) {
-              final user = state.userById(entry.key);
-              final isSelf = entry.key == state.me.id;
-              final canAct = manage &&
-                  !isSelf &&
-                  entry.value != GroupRole.leader;
-              return Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.line),
-                ),
-                child: Row(
-                  children: [
-                    Avatar(user?.initials ?? '?', imageUrl: user?.avatarUrl, imageBytes: user?.avatarBytes),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${user?.name ?? 'Former member'}${isSelf ? ' (you)' : ''}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            (user?.showVehicle ?? true) || manage || isSelf
-                                ? user?.vehicle?.name ?? 'No vehicle on profile'
-                                : 'Vehicle not shared',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
+            child: Builder(
+              builder: (context) {
+                final user = state.userById(entry.key);
+                final isSelf = entry.key == state.me.id;
+                final canAct =
+                    manage && !isSelf && entry.value != GroupRole.leader;
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.line),
+                  ),
+                  child: Row(
+                    children: [
+                      Avatar(
+                        user?.initials ?? '?',
+                        imageUrl: user?.avatarUrl,
+                        imageBytes: user?.avatarBytes,
                       ),
-                    ),
-                    if (user?.isVerified ?? false) ...[
-                      const Tag('Verified', tone: Tone.success, icon: 'check'),
-                      const SizedBox(width: 6),
-                    ],
-                    if (entry.value != GroupRole.member)
-                      Tag(entry.value.label, tone: Tone.pink),
-                    if (canAct) ...[
-                      const SizedBox(width: 6),
-                      Builder(
-                        builder: (anchor) => Pressable(
-                          label: 'Member options',
-                          onTap: () async {
-                            final v = await showAppMenu<String>(anchor, [
-                              if (leader && entry.value == GroupRole.member)
-                                const AppMenuItem('officer', 'Make officer',
-                                    icon: 'shield'),
-                              if (leader && entry.value == GroupRole.officer)
-                                const AppMenuItem(
-                                    'member', 'Remove officer role',
-                                    icon: 'profile'),
-                              const AppMenuItem('remove', 'Remove from group',
-                                  icon: 'close', danger: true),
-                            ]);
-                            if (v == 'officer') {
-                              state.setRole(c, entry.key, GroupRole.officer);
-                            } else if (v == 'member') {
-                              state.setRole(c, entry.key, GroupRole.member);
-                            } else if (v == 'remove') {
-                              state.removeMember(c, entry.key);
-                            }
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(6),
-                            child: AppIcon('more',
-                                size: 18, color: AppColors.inkSoft),
-                          ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${user?.name ?? 'Former member'}${isSelf ? ' (you)' : ''}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              (user?.showVehicle ?? true) || manage || isSelf
+                                  ? user?.vehicle?.name ??
+                                        'No vehicle on profile'
+                                  : 'Vehicle not shared',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
                       ),
+                      if (user?.isVerified ?? false) ...[
+                        const Tag(
+                          'Verified',
+                          tone: Tone.success,
+                          icon: 'check',
+                        ),
+                        const SizedBox(width: 6),
+                      ],
+                      if (entry.value != GroupRole.member)
+                        Tag(entry.value.label, tone: Tone.pink),
+                      if (canAct) ...[
+                        const SizedBox(width: 6),
+                        Builder(
+                          builder: (anchor) => Pressable(
+                            label: 'Member options',
+                            onTap: () async {
+                              final v = await showAppMenu<String>(anchor, [
+                                if (leader && entry.value == GroupRole.member)
+                                  const AppMenuItem(
+                                    'officer',
+                                    'Make officer',
+                                    icon: 'shield',
+                                  ),
+                                if (leader && entry.value == GroupRole.officer)
+                                  const AppMenuItem(
+                                    'member',
+                                    'Remove officer role',
+                                    icon: 'profile',
+                                  ),
+                                const AppMenuItem(
+                                  'remove',
+                                  'Remove from group',
+                                  icon: 'close',
+                                  danger: true,
+                                ),
+                              ]);
+                              if (v == 'officer') {
+                                state.setRole(c, entry.key, GroupRole.officer);
+                              } else if (v == 'member') {
+                                state.setRole(c, entry.key, GroupRole.member);
+                              } else if (v == 'remove') {
+                                state.removeMember(c, entry.key);
+                              }
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(6),
+                              child: AppIcon(
+                                'more',
+                                size: 18,
+                                color: AppColors.inkSoft,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              );
-            }),
+                  ),
+                );
+              },
+            ),
           ),
       ],
     );
@@ -878,8 +962,8 @@ class _RequestCard extends StatelessWidget {
     final state = context.read<AppState>();
     final user = state.userById(userId);
     final c = community;
-    final meetsModel = c.criteriaModel == null ||
-        user?.vehicle?.name == c.criteriaModel;
+    final meetsModel =
+        c.criteriaModel == null || user?.vehicle?.name == c.criteriaModel;
     return AppCard(
       color: AppColors.pinkSoft,
       border: false,
@@ -888,14 +972,21 @@ class _RequestCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Avatar(user?.initials ?? '?', imageUrl: user?.avatarUrl, imageBytes: user?.avatarBytes, pink: true),
+              Avatar(
+                user?.initials ?? '?',
+                imageUrl: user?.avatarUrl,
+                imageBytes: user?.avatarBytes,
+                pink: true,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(user?.name ?? 'Unknown',
-                        style: const TextStyle(fontWeight: FontWeight.w600)),
+                    Text(
+                      user?.name ?? 'Unknown',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     Text(
                       '${user?.vehicle?.name ?? 'No vehicle'} · ${user?.region ?? ''}',
                       style: Theme.of(context).textTheme.bodySmall,
@@ -910,10 +1001,10 @@ class _RequestCard extends StatelessWidget {
             spacing: 6,
             runSpacing: 6,
             children: [
-              Tag(user?.verification.label ?? 'Not verified',
-                  tone: (user?.isVerified ?? false)
-                      ? Tone.success
-                      : Tone.neutral),
+              Tag(
+                user?.verification.label ?? 'Not verified',
+                tone: (user?.isVerified ?? false) ? Tone.success : Tone.neutral,
+              ),
               if (c.criteriaModel != null)
                 Tag(
                   meetsModel
@@ -931,8 +1022,7 @@ class _RequestCard extends StatelessWidget {
                   label: 'Decline',
                   kind: AppButtonKind.soft,
                   small: true,
-                  onTap: () =>
-                      state.decideRequest(c, userId, approve: false),
+                  onTap: () => state.decideRequest(c, userId, approve: false),
                 ),
               ),
               const SizedBox(width: 10),
@@ -982,19 +1072,28 @@ class _AboutTab extends StatelessWidget {
         const SizedBox(height: 18),
         Text('Membership', style: text.titleMedium),
         const SizedBox(height: 6),
-        InfoRow('community', c.joinPolicy == JoinPolicy.open
-            ? 'Open: anyone eligible can join right away'
-            : 'Approval-based: a leader or officer reviews each request'),
-        InfoRow('verified', c.requiresVerification
-            ? 'Vehicle ownership must be verified'
-            : 'Ownership verification is not required'),
+        InfoRow(
+          'community',
+          c.joinPolicy == JoinPolicy.open
+              ? 'Open: anyone eligible can join right away'
+              : 'Approval-based: a leader or officer reviews each request',
+        ),
+        InfoRow(
+          'verified',
+          c.requiresVerification
+              ? 'Vehicle ownership must be verified'
+              : 'Ownership verification is not required',
+        ),
         if (c.criteriaModel != null)
           InfoRow('car', 'Vehicle model: ${c.criteriaModel}'),
         if (c.criteriaRegion != null)
           InfoRow('pin', 'Region: ${c.criteriaRegion}'),
-        InfoRow('vote', c.membersCanPropose
-            ? 'Members can open proposals and polls'
-            : 'Only leaders and officers open proposals and polls'),
+        InfoRow(
+          'vote',
+          c.membersCanPropose
+              ? 'Members can open proposals and polls'
+              : 'Only leaders and officers open proposals and polls',
+        ),
         const SizedBox(height: 18),
         Text('Rules', style: text.titleMedium),
         const SizedBox(height: 6),
@@ -1037,14 +1136,16 @@ class _SettingsFormState extends State<_SettingsForm> {
           subtitle: 'Off means anyone eligible joins right away.',
           value: c.joinPolicy == JoinPolicy.approval,
           onChanged: (v) => state.updateGroupSettings(
-              c, (g) => g.joinPolicy = v ? JoinPolicy.approval : JoinPolicy.open),
+            c,
+            (g) => g.joinPolicy = v ? JoinPolicy.approval : JoinPolicy.open,
+          ),
         ),
         ToggleRow(
           title: 'Require verified ownership',
           subtitle: 'Only members with the verified-owner label can join.',
           value: c.requiresVerification,
-          onChanged: (v) => state.updateGroupSettings(
-              c, (g) => g.requiresVerification = v),
+          onChanged: (v) =>
+              state.updateGroupSettings(c, (g) => g.requiresVerification = v),
         ),
         ToggleRow(
           title: 'Members can open proposals',

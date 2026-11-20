@@ -95,43 +95,46 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
           child: switch (view) {
             'Events' => const EventsPanel(),
             'My groups' => Column(
-                children: [
-                  if (joined.isEmpty)
-                    const EmptyState(
-                      icon: 'community',
-                      title: 'No communities yet',
-                      message:
-                          'Open Discover to find a community or tribe to join.',
-                    ),
-                  for (final (i, c) in joined.indexed)
-                    FadeIn(index: i, child: CommunityCard(community: c)),
-                ],
-              ),
-            _ => Column(
-                children: [
-                  PillRow(
-                    padding: EdgeInsets.zero,
-                    labels: [
-                      'All',
-                      for (final t in CommunityType.values) t.label,
-                    ],
-                    index: _type,
-                    onChanged: (i) => setState(() => _type = i),
+              children: [
+                if (joined.isEmpty)
+                  const EmptyState(
+                    icon: 'community',
+                    title: 'No communities yet',
+                    message:
+                        'Open Discover to find a community or tribe to join.',
                   ),
-                  const SizedBox(height: 14),
-                  if (discover.isEmpty)
-                    const EmptyState(
-                      icon: 'community',
-                      title: 'No communities of this type',
-                    ),
-                  for (final (i, c) in discover.indexed)
-                    FadeIn(
-                      key: ValueKey(c.id),
-                      index: i,
-                      child: CommunityCard(community: c),
-                    ),
-                ],
-              ),
+                for (final (i, c) in joined.indexed)
+                  FadeIn(
+                    index: i,
+                    child: CommunityCard(community: c),
+                  ),
+              ],
+            ),
+            _ => Column(
+              children: [
+                PillRow(
+                  padding: EdgeInsets.zero,
+                  labels: [
+                    'All',
+                    for (final t in CommunityType.values) t.label,
+                  ],
+                  index: _type,
+                  onChanged: (i) => setState(() => _type = i),
+                ),
+                const SizedBox(height: 14),
+                if (discover.isEmpty)
+                  const EmptyState(
+                    icon: 'community',
+                    title: 'No communities of this type',
+                  ),
+                for (final (i, c) in discover.indexed)
+                  FadeIn(
+                    key: ValueKey(c.id),
+                    index: i,
+                    child: CommunityCard(community: c),
+                  ),
+              ],
+            ),
           },
         ),
       ],
@@ -182,14 +185,16 @@ class CommunityCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(c.name,
-                          style: Theme.of(context).textTheme.titleMedium),
+                      Text(
+                        c.name,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         parent != null
                             ? 'Tribe of ${parent.name}'
                             : [
-                                plural(c.members.length, 'member'),
+                                plural(c.memberCount, 'member'),
                                 if (tribes > 0) plural(tribes, 'tribe'),
                               ].join(' · '),
                         style: Theme.of(context).textTheme.bodySmall,
@@ -215,7 +220,11 @@ class CommunityCard extends StatelessWidget {
                 Tag(c.type.label),
                 Tag(c.joinPolicy.label, tone: Tone.neutral),
                 if (c.requiresVerification)
-                  const Tag('Verified owners', tone: Tone.success, icon: 'check'),
+                  const Tag(
+                    'Verified owners',
+                    tone: Tone.success,
+                    icon: 'check',
+                  ),
                 if (role != null) Tag(role.label, tone: Tone.pink),
                 if (pending)
                   const Tag('Waiting for admin approval', tone: Tone.warning),

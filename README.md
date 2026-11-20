@@ -125,7 +125,7 @@ The app runs in one of two modes, chosen at build time:
 - **Sample data** (default): no backend, a sample account picker, data resets on restart.
 - **Supabase**: email sign-in and registration, records loaded from the database, every action saved to it.
 
-The project `evyahe` (Singapore region) already has the five migrations, the seed data, the news function and its daily schedule applied, and `supabase.json` on this machine points at it. A teammate setting up from scratch does this:
+The project `evyahe` (Singapore region) already has the six migrations, the seed data, the news function and its daily schedule applied, and `supabase.json` on this machine points at it. A teammate setting up from scratch does this:
 
 1. Create a project at supabase.com, or get access to the existing one.
 2. In the SQL editor, run these files in order (skip if using the existing project):
@@ -134,6 +134,7 @@ The project `evyahe` (Singapore region) already has the five migrations, the see
    - `supabase/migrations/20261116000003_function_privileges.sql` (limits who can call the helper functions)
    - `supabase/migrations/20261117000004_news.sql` (news tables and sources), then deploy `supabase/functions/fetch-ev-news` and run `supabase/schedule_news.sql`
    - `supabase/migrations/20261117000005_profile_settings.sql` (username, photo, charging, notification and privacy preferences; the `avatars` storage bucket and its policies)
+   - `supabase/migrations/20261120000006_privacy_rules.sql` (private membership lists, secret ballots and private RSVPs; see below)
    - `supabase/seed.sql` (sample vehicles, stations, providers and reference data)
 3. Copy `supabase.example.json` to `supabase.json` and fill in the project URL and publishable key from Project Settings > API. `supabase.json` is ignored by git.
 4. Run the app with the settings:
@@ -156,6 +157,14 @@ How it fits together:
 - `lib/data/remote/row_mapping.dart` converts database rows to models and back.
 - `AppState` applies a change in memory first, then sends it. If the server rejects it, the user sees the message and the records reload. Pull down on any tab to reload.
 - The role rules are checked twice: in `AppState` so the screens hide what a role cannot do, and in the row-level security policies so the server refuses it regardless.
+
+Privacy rules, from Section 3.11 of the proposal:
+
+- **Membership lists** are readable only by a community's own members and by administrators. Everyone else gets a member count from `member_counts()`.
+- **Votes** are secret: each member can read only their own vote. Poll results are counted from `poll_ballots()`, which returns the other ballots without voters, sorted by content so the order gives nothing away.
+- **RSVPs**, which hold the attendee's vehicle and starting battery level, are readable only by the attendee and the event's organizers (its creator and the community's leaders and officers). Everyone else gets a head count from `event_attendance()`.
+
+The app loads these three functions with the tables (`remoteFunctions` in `row_mapping.dart`) and shows counts with `Community.memberCount`, `CommunityEvent.attendeeCount` and `Proposal.ballots`. The rules were checked on the live database as an outsider, a member and a leader.
 
 Known limits of this first version:
 

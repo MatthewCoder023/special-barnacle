@@ -418,7 +418,7 @@ class EventCard extends StatelessWidget {
                     children: [
                       Tag(e.type.label, tone: Tone.pink),
                       Tag(
-                        '${e.rsvps.length} of ${e.capacity} going',
+                        '${e.attendeeCount} of ${e.capacity} going',
                         tone: Tone.neutral,
                       ),
                       if (going)

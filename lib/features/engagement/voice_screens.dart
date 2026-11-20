@@ -34,8 +34,7 @@ class _ConcernCardState extends State<ConcernCard> {
     final c = state.communityById(k.communityId);
     final station = state.stationById(k.stationId);
     final mine = k.supporters.contains(state.me.id);
-    final canSupport =
-        state.canParticipate && c != null && state.isMemberOf(c);
+    final canSupport = state.canParticipate && c != null && state.isMemberOf(c);
     final duration = AppMotion.of(context, AppMotion.standard);
 
     return Padding(
@@ -52,8 +51,10 @@ class _ConcernCardState extends State<ConcernCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(k.title,
-                          style: Theme.of(context).textTheme.titleSmall),
+                      Text(
+                        k.title,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 6,
@@ -62,7 +63,11 @@ class _ConcernCardState extends State<ConcernCard> {
                           Tag(k.category),
                           Tag(k.location, tone: Tone.neutral, icon: 'pin'),
                           if (k.hasPhoto)
-                            const Tag('Photo', tone: Tone.neutral, icon: 'camera'),
+                            const Tag(
+                              'Photo',
+                              tone: Tone.neutral,
+                              icon: 'camera',
+                            ),
                         ],
                       ),
                     ],
@@ -74,8 +79,10 @@ class _ConcernCardState extends State<ConcernCard> {
                   label: mine ? 'Withdraw support' : 'Support this concern',
                   child: AnimatedContainer(
                     duration: AppMotion.of(context, AppMotion.fast),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: mine ? AppColors.pink : AppColors.pinkSoft,
                       borderRadius: BorderRadius.circular(14),
@@ -114,9 +121,10 @@ class _ConcernCardState extends State<ConcernCard> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(k.details,
-                              style:
-                                  const TextStyle(color: AppColors.inkSoft)),
+                          Text(
+                            k.details,
+                            style: const TextStyle(color: AppColors.inkSoft),
+                          ),
                           const SizedBox(height: 10),
                           Text(
                             'Filed by ${state.userName(k.authorId)} · ${fmtDate(k.createdAt)}',
@@ -136,13 +144,19 @@ class _ConcernCardState extends State<ConcernCard> {
                               child: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  AppIcon('camera',
-                                      size: 18, color: AppColors.inkFaint),
+                                  AppIcon(
+                                    'camera',
+                                    size: 18,
+                                    color: AppColors.inkFaint,
+                                  ),
                                   SizedBox(width: 8),
-                                  Text('Evidence photo attached',
-                                      style: TextStyle(
-                                          color: AppColors.inkSoft,
-                                          fontSize: 13)),
+                                  Text(
+                                    'Evidence photo attached',
+                                    style: TextStyle(
+                                      color: AppColors.inkSoft,
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -173,8 +187,11 @@ class _ConcernCardState extends State<ConcernCard> {
                                 ),
                                 child: const Padding(
                                   padding: EdgeInsets.all(6),
-                                  child: AppIcon('flag',
-                                      size: 16, color: AppColors.inkFaint),
+                                  child: AppIcon(
+                                    'flag',
+                                    size: 16,
+                                    color: AppColors.inkFaint,
+                                  ),
                                 ),
                               ),
                             ],
@@ -231,7 +248,8 @@ class _ConcernFormState extends State<_ConcernForm> {
   @override
   Widget build(BuildContext context) {
     final state = context.read<AppState>();
-    final ready = _title.text.trim().isNotEmpty &&
+    final ready =
+        _title.text.trim().isNotEmpty &&
         _details.text.trim().isNotEmpty &&
         _location.text.trim().isNotEmpty;
     return Column(
@@ -287,8 +305,7 @@ class _ConcernFormState extends State<_ConcernForm> {
             },
             child: Container(
               width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               margin: const EdgeInsets.only(bottom: 14),
               decoration: BoxDecoration(
                 color: AppColors.skyMist,
@@ -307,8 +324,7 @@ class _ConcernFormState extends State<_ConcernForm> {
                       ),
                     ),
                   ),
-                  const AppIcon('chevron',
-                      size: 16, color: AppColors.inkFaint),
+                  const AppIcon('chevron', size: 16, color: AppColors.inkFaint),
                 ],
               ),
             ),
@@ -322,8 +338,7 @@ class _ConcernFormState extends State<_ConcernForm> {
         ),
         ToggleRow(
           title: 'Attach an evidence photo',
-          subtitle:
-              'Photo upload connects to Supabase Storage; this marks the concern as having one.',
+          subtitle: 'Photo upload connects to Supabase Storage; this marks the concern as having one.',
           value: _photo,
           onChanged: (v) => setState(() => _photo = v),
         ),
@@ -399,11 +414,13 @@ class _CompileSummaryScreenState extends State<CompileSummaryScreen> {
     for (final id in {for (final k in concerns) ?k.stationId}) {
       final s = state.stationById(id);
       if (s == null) continue;
-      final recent = s.reports
-          .where((r) => state.now.difference(r.createdAt).inDays <= 30);
+      final recent = s.reports.where(
+        (r) => state.now.difference(r.createdAt).inDays <= 30,
+      );
       final down = recent.where((r) => !r.working).length;
       stationLines.add(
-          '${s.name}: $down of ${plural(recent.length, 'status report')} in the last 30 days said not working');
+        '${s.name}: $down of ${plural(recent.length, 'status report')} in the last 30 days said not working',
+      );
     }
 
     final text = StringBuffer()
@@ -412,7 +429,8 @@ class _CompileSummaryScreenState extends State<CompileSummaryScreen> {
       ..writeln('Subject: ${category == 'All' ? 'Member concerns' : category}')
       ..writeln()
       ..writeln(
-          '${plural(concerns.length, 'concern')} filed by members, supported by ${plural(supporters.length, 'member')} of ${c.members.length}.')
+        '${plural(concerns.length, 'concern')} filed by members, supported by ${plural(supporters.length, 'member')} of ${c.memberCount}.',
+      )
       ..writeln()
       ..writeln('Locations affected:');
     for (final l in locations) {
@@ -422,7 +440,9 @@ class _CompileSummaryScreenState extends State<CompileSummaryScreen> {
       ..writeln()
       ..writeln('Concerns:');
     for (final k in concerns) {
-      text.writeln('- ${k.title} (${k.location}, ${plural(k.supporters.length, 'supporter')})');
+      text.writeln(
+        '- ${k.title} (${k.location}, ${plural(k.supporters.length, 'supporter')})',
+      );
     }
     if (stationLines.isNotEmpty) {
       text
@@ -469,11 +489,19 @@ class _CompileSummaryScreenState extends State<CompileSummaryScreen> {
               onTap: concerns.isEmpty
                   ? null
                   : () {
-                      state.publishSummary(c, title, category, body,
-                          concerns.length, supporters.length);
+                      state.publishSummary(
+                        c,
+                        title,
+                        category,
+                        body,
+                        concerns.length,
+                        supporters.length,
+                      );
                       Navigator.of(context).pop();
-                      showToast(context,
-                          'Summary published. Members were notified.');
+                      showToast(
+                        context,
+                        'Summary published. Members were notified.',
+                      );
                     },
             ),
           ),
@@ -492,24 +520,27 @@ class _CompileSummaryScreenState extends State<CompileSummaryScreen> {
           children: [
             Expanded(
               child: StatTile(
-                  icon: 'megaphone',
-                  value: '${concerns.length}',
-                  label: 'Concerns'),
+                icon: 'megaphone',
+                value: '${concerns.length}',
+                label: 'Concerns',
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: StatTile(
-                  icon: 'community',
-                  value: '${supporters.length}',
-                  label: 'Members affected',
-                  pink: true),
+                icon: 'community',
+                value: '${supporters.length}',
+                label: 'Members affected',
+                pink: true,
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: StatTile(
-                  icon: 'pin',
-                  value: '${locations.length}',
-                  label: 'Locations'),
+                icon: 'pin',
+                value: '${locations.length}',
+                label: 'Locations',
+              ),
             ),
           ],
         ),

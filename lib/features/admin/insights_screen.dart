@@ -21,7 +21,7 @@ class InsightsScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     final c = state.communityById(communityId)!;
     final text = Theme.of(context).textTheme;
-    final members = c.members.length;
+    final members = c.memberCount;
 
     final events = state.events.where((e) => e.communityId == c.id).toList();
     final polls = state.proposals.where((p) => p.communityId == c.id).toList();
@@ -69,8 +69,10 @@ class InsightsScreen extends StatelessWidget {
     reliability.sort((a, b) => a.$2.compareTo(b.$2));
     final coverage = countBy(state.stations.map((s) => s.city));
     final reported = state.stations
-        .where((s) =>
-            ChargingRules.condition(s, state.now) != StationCondition.unknown)
+        .where(
+          (s) =>
+              ChargingRules.condition(s, state.now) != StationCondition.unknown,
+        )
         .length;
 
     return DetailScaffold(
@@ -82,22 +84,27 @@ class InsightsScreen extends StatelessWidget {
           children: [
             Expanded(
               child: StatTile(
-                  icon: 'community', value: '$members', label: 'Members'),
+                icon: 'community',
+                value: '$members',
+                label: 'Members',
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: StatTile(
-                  icon: 'verified',
-                  value: '$verified',
-                  label: 'Verified owners',
-                  pink: true),
+                icon: 'verified',
+                value: '$verified',
+                label: 'Verified owners',
+                pink: true,
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: StatTile(
-                  icon: 'profile',
-                  value: '${c.joinRequests.length}',
-                  label: 'Join requests'),
+                icon: 'profile',
+                value: '${c.joinRequests.length}',
+                label: 'Join requests',
+              ),
             ),
           ],
         ),
@@ -116,9 +123,9 @@ class InsightsScreen extends StatelessWidget {
         AppCard(
           child: events.isEmpty
               ? const Text('No events yet.')
-              : BarList(items: [
-                  for (final e in events) (e.title, e.rsvps.length),
-                ]),
+              : BarList(
+                  items: [for (final e in events) (e.title, e.attendeeCount)],
+                ),
         ),
         const SectionHeader('Poll participation'),
         AppCard(
@@ -127,13 +134,17 @@ class InsightsScreen extends StatelessWidget {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BarList(items: [
-                      for (final p in polls)
-                        (p.title, VotingRules.tally(p).totalVotes),
-                    ]),
+                    BarList(
+                      items: [
+                        for (final p in polls)
+                          (p.title, VotingRules.tally(p).totalVotes),
+                      ],
+                    ),
                     const SizedBox(height: 8),
-                    Text('Votes cast, out of ${plural(members, 'member')}.',
-                        style: text.bodySmall),
+                    Text(
+                      'Votes cast, out of ${plural(members, 'member')}.',
+                      style: text.bodySmall,
+                    ),
                   ],
                 ),
         ),

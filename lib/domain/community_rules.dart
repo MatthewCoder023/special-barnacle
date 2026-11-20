@@ -93,13 +93,19 @@ class EventRules {
           ? ChargingRules.pctAfter(v, rsvp.startBatteryPct, route.totalKm)
           : ChargingRules.pctAfter(v, chargeToPct, route.kmFromStop);
       return AttendeeCheck(
-          rsvp, Feasibility.ok, 'About ${arrival.round()}% left on arrival');
+        rsvp,
+        Feasibility.ok,
+        'About ${arrival.round()}% left on arrival',
+      );
     }
     // PHEV and REEV are checked on electric-only range, but the engine can
     // extend it, so they are noted rather than flagged.
     if (v.hasEngine) {
-      return AttendeeCheck(rsvp, Feasibility.engine,
-          'Electric range ends early; the engine can cover the rest');
+      return AttendeeCheck(
+        rsvp,
+        Feasibility.engine,
+        'Electric range ends early; the engine can cover the rest',
+      );
     }
     return AttendeeCheck(rsvp, Feasibility.flagged, problem);
   }
@@ -137,18 +143,19 @@ class VotingRules {
   VotingRules._();
 
   static Tally tally(Proposal p) {
-    final ballots = p.votes.values.where((b) => b.isNotEmpty).toList();
+    final ballots = p.ballots.where((b) => b.isNotEmpty).toList();
     final first = List<int>.filled(p.options.length, 0);
     for (final b in ballots) {
       first[b.first]++;
     }
     if (ballots.isEmpty) {
       return Tally(
-          firstChoice: first,
-          totalVotes: 0,
-          quorum: p.quorum,
-          winner: null,
-          rounds: 0);
+        firstChoice: first,
+        totalVotes: 0,
+        quorum: p.quorum,
+        winner: null,
+        rounds: 0,
+      );
     }
 
     int? winner;

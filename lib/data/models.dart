@@ -189,8 +189,9 @@ class Community {
     this.status = ApprovalStatus.approved,
     Map<String, GroupRole>? members,
     List<String>? joinRequests,
-  })  : members = members ?? {},
-        joinRequests = joinRequests ?? [] {
+    this.hiddenMembers = 0,
+  }) : members = members ?? {},
+       joinRequests = joinRequests ?? [] {
     // Initial members get join dates spread from the creation date to now,
     // so the membership-growth chart has something to show. The backend
     // stores the real date each member joined.
@@ -200,6 +201,13 @@ class Community {
       joinedAt[ids[i]] = createdAt.add(age * (i / ids.length));
     }
   }
+
+  /// Members the user may not see. Membership lists are visible only to
+  /// a community's own members, so others get a count from the backend.
+  int hiddenMembers;
+
+  /// Everyone in the community, including members the user cannot see.
+  int get memberCount => members.length + hiddenMembers;
 
   final String id;
   String name;
@@ -281,8 +289,8 @@ class Discussion {
     this.isQuestion = false,
     List<Reply>? replies,
     Set<String>? helpful,
-  })  : replies = replies ?? [],
-        helpful = helpful ?? {};
+  }) : replies = replies ?? [],
+       helpful = helpful ?? {};
 
   final String id;
   final String communityId;
@@ -338,9 +346,18 @@ class Proposal {
     required this.quorum,
     required this.createdAt,
     Map<String, List<int>>? votes,
+    List<List<int>>? hiddenBallots,
     this.closed = false,
     this.outcome,
-  }) : votes = votes ?? {};
+  }) : votes = votes ?? {},
+       hiddenBallots = hiddenBallots ?? [];
+
+  /// Other members' ballots, without the voter. The backend shows each
+  /// member only their own vote; the rest arrive anonymously for counting.
+  final List<List<int>> hiddenBallots;
+
+  /// Every ballot cast, for counting results.
+  Iterable<List<int>> get ballots => [...votes.values, ...hiddenBallots];
 
   final String id;
   final String communityId;
@@ -516,7 +533,16 @@ class CommunityEvent {
     this.stopStationId,
     this.cancelled = false,
     List<Rsvp>? rsvps,
+    this.hiddenAttendees = 0,
   }) : rsvps = rsvps ?? [];
+
+  /// Attendees the user may not see. An RSVP holds the attendee's vehicle
+  /// and battery level, so only the attendee and the event's organizers can
+  /// read it; others get a head count.
+  int hiddenAttendees;
+
+  /// Everyone going, including attendees the user cannot see.
+  int get attendeeCount => rsvps.length + hiddenAttendees;
 
   final String id;
   final String communityId;
@@ -595,8 +621,8 @@ class Station {
     required this.sourceDate,
     List<StatusReport>? reports,
     List<CheckIn>? checkIns,
-  })  : reports = reports ?? [],
-        checkIns = checkIns ?? [];
+  }) : reports = reports ?? [],
+       checkIns = checkIns ?? [];
 
   final String id;
   final String name;

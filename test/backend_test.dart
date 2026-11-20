@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:evyahe/data/models.dart';
 import 'package:evyahe/data/remote/remote_store.dart';
 import 'package:evyahe/data/remote/row_mapping.dart';
+import 'package:evyahe/domain/community_rules.dart';
 import 'package:evyahe/state/app_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -185,6 +186,59 @@ void main() {
       expect(me.vehicle?.name, 'BYD Atto 3');
       expect(me.vehicle?.id, _vehicle);
       expect(me.isVerified, isTrue);
+    });
+
+    test('private records arrive as counts and anonymous ballots', () {
+      const event = '99999999-9999-4999-8999-999999999999';
+      final s = buildSnapshot({
+        ..._tables(),
+        // Only the user's own RSVP is readable; the backend says 5 are going.
+        'events': [
+          {
+            'id': event, 'community_id': _community, 'creator_id': _leader, 'title': 'Run',
+            'type': 'convoy', 'description': '', 'starts_at': _stamp, 'venue_name': 'Tagaytay',
+            'venue_lat': 14.1, 'venue_lng': 120.9, 'capacity': 10, 'visibility': 'community',
+            'cancelled': false,
+          },
+        ],
+        'rsvps': [
+          {'event_id': event, 'user_id': _me, 'vehicle_id': _vehicle, 'start_battery_pct': 80},
+        ],
+        'event_attendance': [
+          {'event_id': event, 'attendees': 5},
+        ],
+        // 2 members are readable; the community has 40.
+        'member_counts': [
+          {'community_id': _community, 'members': 40},
+        ],
+        // Three other members' ballots, with no voter attached.
+        'poll_ballots': [
+          {'proposal_id': _proposal, 'choice': [0]},
+          {'proposal_id': _proposal, 'choice': [0]},
+          {'proposal_id': _proposal, 'choice': [1]},
+        ],
+      });
+
+      final c = s.communities.firstWhere((c) => c.id == _community);
+      expect(c.members.length, 2);
+      expect(c.memberCount, 40);
+
+      final p = s.proposals.single;
+      // The readable vote keeps its voter; the others are counted anonymously.
+      expect(p.votes, {_leader: [1]});
+      final t = VotingRules.tally(p);
+      expect(t.totalVotes, 4);
+      expect(t.firstChoice, [2, 2]);
+
+      final e = s.events.single;
+      expect(e.rsvps.single.userId, _me);
+      expect(e.attendeeCount, 5);
+    });
+
+    test('without counts nothing is hidden', () {
+      final c = snap.communities.firstWhere((c) => c.id == _community);
+      expect(c.memberCount, c.members.length);
+      expect(snap.proposals.single.hiddenBallots, isEmpty);
     });
 
     test('tolerates tables that returned no rows', () {

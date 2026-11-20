@@ -27,21 +27,26 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
-    final p =
-        state.proposals.where((x) => x.id == widget.proposalId).firstOrNull;
+    final p = state.proposals
+        .where((x) => x.id == widget.proposalId)
+        .firstOrNull;
     final c = p == null ? null : state.communityById(p.communityId);
     if (p == null || c == null) {
-      return const DetailScaffold(title: 'Proposal', children: [
-        EmptyState(icon: 'vote', title: 'This proposal is not available'),
-      ]);
+      return const DetailScaffold(
+        title: 'Proposal',
+        children: [
+          EmptyState(icon: 'vote', title: 'This proposal is not available'),
+        ],
+      );
     }
     final open = state.isOpen(p);
     final canVote = open && state.canParticipate && state.isMemberOf(c);
     final saved = p.votes[state.me.id];
     final choice = _choice ?? saved ?? const <int>[];
     final tally = VotingRules.tally(p);
-    final complete =
-        p.ranked ? choice.length == p.options.length : choice.length == 1;
+    final complete = p.ranked
+        ? choice.length == p.options.length
+        : choice.length == 1;
     final changed = !_same(choice, saved);
     final text = Theme.of(context).textTheme;
 
@@ -65,8 +70,10 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
           spacing: 6,
           runSpacing: 6,
           children: [
-            Tag(open ? 'Open' : 'Closed',
-                tone: open ? Tone.success : Tone.neutral),
+            Tag(
+              open ? 'Open' : 'Closed',
+              tone: open ? Tone.success : Tone.neutral,
+            ),
             Tag(p.ranked ? 'Ranked choice' : 'Single choice'),
           ],
         ),
@@ -75,19 +82,31 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
         const SizedBox(height: 8),
         Text(p.description, style: const TextStyle(color: AppColors.inkSoft)),
         const SizedBox(height: 12),
-        InfoRow('profile', 'Proposed by ${state.userName(p.authorId)} in ${c.name}'),
-        InfoRow('clock',
-            '${open ? 'Closes' : 'Deadline was'} ${fmtDateTime(p.deadline)}'),
-        InfoRow('community',
-            'Quorum set by the community: ${plural(p.quorum, 'vote')}'),
+        InfoRow(
+          'profile',
+          'Proposed by ${state.userName(p.authorId)} in ${c.name}',
+        ),
+        InfoRow(
+          'clock',
+          '${open ? 'Closes' : 'Deadline was'} ${fmtDateTime(p.deadline)}',
+        ),
+        InfoRow(
+          'community',
+          'Quorum set by the community: ${plural(p.quorum, 'vote')}',
+        ),
         if (p.outcome != null) ...[
           const SizedBox(height: 12),
-          NoticeBox('Published outcome: ${p.outcome}',
-              tone: Tone.success, icon: 'check'),
+          NoticeBox(
+            'Published outcome: ${p.outcome}',
+            tone: Tone.success,
+            icon: 'check',
+          ),
         ],
-        SectionHeader(canVote
-            ? (p.ranked ? 'Tap options in order of preference' : 'Choose one')
-            : 'Options'),
+        SectionHeader(
+          canVote
+              ? (p.ranked ? 'Tap options in order of preference' : 'Choose one')
+              : 'Options',
+        ),
         for (var i = 0; i < p.options.length; i++)
           _OptionRow(
             label: p.options[i],
@@ -96,16 +115,16 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
             onTap: !canVote
                 ? null
                 : () => setState(() {
-                      final next = [...choice];
-                      if (p.ranked) {
-                        if (!next.remove(i)) next.add(i);
-                      } else {
-                        next
-                          ..clear()
-                          ..add(i);
-                      }
-                      _choice = next;
-                    }),
+                    final next = [...choice];
+                    if (p.ranked) {
+                      if (!next.remove(i)) next.add(i);
+                    } else {
+                      next
+                        ..clear()
+                        ..add(i);
+                    }
+                    _choice = next;
+                  }),
           ),
         if (!canVote && open)
           Padding(
@@ -138,8 +157,10 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
                 style: text.bodySmall,
               ),
               const SizedBox(height: 10),
-              Text(_resultLine(p, tally),
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(
+                _resultLine(p, tally),
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
             ],
           ),
         ),
@@ -180,8 +201,8 @@ class _ProposalDetailScreenState extends State<ProposalDetailScreen> {
     final suggested = !t.quorumMet
         ? 'No decision: quorum of ${p.quorum} was not met (${plural(t.totalVotes, 'vote')}).'
         : t.winner == null
-            ? 'No decision: the vote was tied.'
-            : '"${p.options[t.winner!]}" won with ${plural(t.totalVotes, 'vote')} cast.';
+        ? 'No decision: the vote was tied.'
+        : '"${p.options[t.winner!]}" won with ${plural(t.totalVotes, 'vote')} cast.';
     final note = TextEditingController(text: suggested);
     final ok = await showAppDialog<bool>(
       anchor,
@@ -236,7 +257,9 @@ class _OptionRow extends StatelessWidget {
         color: selected ? AppColors.skySoft : AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: selected ? AppColors.sky : AppColors.line, width: 1.4),
+          color: selected ? AppColors.sky : AppColors.line,
+          width: 1.4,
+        ),
       ),
       child: Row(
         children: [
@@ -249,28 +272,33 @@ class _OptionRow extends StatelessWidget {
               color: selected ? AppColors.pink : AppColors.white,
               shape: BoxShape.circle,
               border: Border.all(
-                  color: selected ? AppColors.pink : AppColors.inkFaint,
-                  width: 1.6),
+                color: selected ? AppColors.pink : AppColors.inkFaint,
+                width: 1.6,
+              ),
             ),
             child: AnimatedSwitcher(
               duration: duration,
               child: !selected
                   ? const SizedBox.shrink()
                   : ranked
-                      ? Text('$rank',
-                          key: ValueKey(rank),
-                          style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700))
-                      : const AppIcon('check',
-                          size: 14, color: AppColors.white),
+                  ? Text(
+                      '$rank',
+                      key: ValueKey(rank),
+                      style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )
+                  : const AppIcon('check', size: 14, color: AppColors.white),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(label,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
         ],
       ),
@@ -311,8 +339,10 @@ class _ProposalFormState extends State<_ProposalForm> {
   final _options = [TextEditingController(), TextEditingController()];
   bool _ranked = false;
   double _days = 5;
-  late double _quorum =
-      (widget.community.members.length / 2).ceilToDouble().clamp(1, 50).toDouble();
+  late double _quorum = (widget.community.memberCount / 2)
+      .ceilToDouble()
+      .clamp(1, 50)
+      .toDouble();
 
   @override
   void dispose() {
@@ -326,9 +356,11 @@ class _ProposalFormState extends State<_ProposalForm> {
 
   @override
   Widget build(BuildContext context) {
-    final members = widget.community.members.length;
-    final filled =
-        _options.map((o) => o.text.trim()).where((t) => t.isNotEmpty).toList();
+    final members = widget.community.memberCount;
+    final filled = _options
+        .map((o) => o.text.trim())
+        .where((t) => t.isNotEmpty)
+        .toList();
     final ready = _title.text.trim().isNotEmpty && filled.length >= 2;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,8 +387,7 @@ class _ProposalFormState extends State<_ProposalForm> {
             icon: 'add',
             kind: AppButtonKind.ghost,
             small: true,
-            onTap: () =>
-                setState(() => _options.add(TextEditingController())),
+            onTap: () => setState(() => _options.add(TextEditingController())),
           ),
         const SizedBox(height: 10),
         ToggleRow(
@@ -374,7 +405,8 @@ class _ProposalFormState extends State<_ProposalForm> {
           onChanged: (v) => setState(() => _days = v),
         ),
         FieldLabel(
-            'Quorum: ${plural(_quorum.round(), 'vote')} of ${plural(members, 'member')}'),
+          'Quorum: ${plural(_quorum.round(), 'vote')} of ${plural(members, 'member')}',
+        ),
         Slider(
           value: _quorum.clamp(1, members.toDouble()).toDouble(),
           min: 1,
@@ -396,8 +428,7 @@ class _ProposalFormState extends State<_ProposalForm> {
                     description: _description.text.trim(),
                     options: filled,
                     ranked: _ranked,
-                    deadline:
-                        state.now.add(Duration(days: _days.round())),
+                    deadline: state.now.add(Duration(days: _days.round())),
                     quorum: _quorum.round(),
                   );
                   Navigator.of(context).pop();
